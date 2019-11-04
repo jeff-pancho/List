@@ -26,7 +26,12 @@
         }
 
         #no-lists {
+            position: absolute;
+            top: 0;
             display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
             width: 100%;
             height: 100%;
         }
@@ -71,8 +76,8 @@
 
     </ul>
     <div id="no-lists">
-        <h2 class="no-lists">No lists created yet.<br>
-            Click the + button to create one.</h2>
+        <h4 class="no-lists">No lists created yet.<br>
+            Click the + button to create one.</h4>
         <img id="add-list" src="images/add.png" alt="add">
     </div>
     <script src="scripts/addList.js"></script>
