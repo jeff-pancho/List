@@ -11,6 +11,10 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
+        <!-- Index stylesheet -->
+        <link rel="stylesheet" type="text/css" href="style/index-style.css" />
+        <script src="scripts/index.js"></script>
+
         <!-- The core Firebase JS SDK is always required and must be listed first -->
         <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
         <!-- TODO: Add SDKs for Firebase products that you want to use
@@ -37,7 +41,10 @@
           </script>
     </head>
     <body>
-        <h1 style="text-align: center">Welcome to List Away.</h1>
+        <h1 id="welcome">Welcome to List Away. 
+            <button type="button" id="signup" class="btn btn-primary">Sign Up</button>
+        </h1>
+        
         <div id="firebaseui-auth-container"></div>
         <div id="loader">Loading...</div>
 
