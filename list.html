@@ -11,6 +11,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
+
+    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+    <!-- Firebase app config -->
+    <script src="scripts/firebaseConfig.js"></script>
+
     <style>
         html,
         body {
@@ -88,6 +100,10 @@
     </ul>
     
     <script src="scripts/addList.js"></script>
+    <script src="scripts/createUser.js"></script>
+    <script>
+        createUser();
+    </script>
 </body>
 
 </html>

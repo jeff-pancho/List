@@ -16,30 +16,17 @@
         <!-- Index JS script -->
         <script src="scripts/index.js"></script>
 
-        <!-- The core Firebase JS SDK is always required and must be listed first -->
+        <!-- Firebase -->
         <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
-        <!-- TODO: Add SDKs for Firebase products that you want to use
-            https://firebase.google.com/docs/web/setup#available-libraries -->
         <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
         <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
 
+        <!-- Firebase authentication UI -->
         <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
         <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
-        <script>
-            // Your web app's Firebase configuration
-            var firebaseConfig = {
-              apiKey: "AIzaSyAoQxDEtP4vNI-k_E-12emT-oXEMqRXhmw",
-              authDomain: "list-615f1.firebaseapp.com",
-              databaseURL: "https://list-615f1.firebaseio.com",
-              projectId: "list-615f1",
-              storageBucket: "list-615f1.appspot.com",
-              messagingSenderId: "68229933150",
-              appId: "1:68229933150:web:223ad34b58a72c4f6aeccf"
-            };
-            // Initialize Firebase
-            firebase.initializeApp(firebaseConfig);
-          </script>
+        <!-- Firebase app config -->
+        <script src="scripts/firebaseConfig.js"></script>
     </head>
     <body>
         <h1 id="welcome">Welcome to List Away. 
