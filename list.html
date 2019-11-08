@@ -19,10 +19,7 @@
         }
 
         img {
-            max-width: 100px;
-            position: absolute;
-            bottom: 10px;
-            right: 10px;
+            max-width: 30px;
         }
 
         #no-lists {
@@ -72,14 +69,24 @@
             </ul>
         </div>
     </nav>
-    <ul class="list-group">
 
-    </ul>
     <div id="no-lists">
         <h4 class="no-lists">No lists created yet.<br>
-            Click the + button to create one.</h4>
-        <img id="add-list" src="images/add.png" alt="add">
+        Try creating one!</h4>
     </div>
+
+    <!-- Where the lists will be stored. -->
+    <ul id="list-container" class="list-group">
+        <!--Add list items after #create-list-container -->
+        <li id="create-list-container" class="list-group-item">
+            <!-- Button to create list -->
+            <button type="button" id="create-list" class="btn btn-primary">
+                <img src="images/add.png">
+            </button>
+            Create new list
+        </li>
+    </ul>
+    
     <script src="scripts/addList.js"></script>
 </body>
 
