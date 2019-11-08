@@ -11,11 +11,19 @@ $(document).ready(function(){
     $(createListButton).click(addList);
 
     function addList() {
+        //hide #no-lists if it's still visible
         if($(noLists).is(":visible")) {
             $(noLists).hide();
         }
         
         let listItem = $("<li class=\"list-group-item\">New List</li>");
         $(listItem).insertBefore(createList)
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            db.collection("users").doc(user.uid).collection("lists").doc("newList").set({
+                "name": "test",
+                "status": "active"
+            });
+        });
     }
 });
