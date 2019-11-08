@@ -16,11 +16,13 @@ $(document).ready(function(){
             $(noLists).hide();
         }
         
+        //append
         let listItem = $("<li class=\"list-group-item\">New List</li>");
         $(listItem).insertBefore(createList)
 
+        //add new list to database
         firebase.auth().onAuthStateChanged(function(user) {
-            db.collection("users").doc(user.uid).collection("lists").doc("newList").set({
+            db.collection("users").doc(user.uid).collection("lists").add({
                 "name": "test",
                 "status": "active"
             });
