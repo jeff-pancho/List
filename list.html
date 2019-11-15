@@ -11,7 +11,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
+
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
@@ -34,7 +34,16 @@
             max-width: 30px;
         }
 
+        .navbar {
+            background-color: #4B9DE9 !important;
+        }
+
+        .list-group-item {
+            background-color: #E7F3FF;
+        }
+
         #no-lists {
+            pointer-events: none;
             position: absolute;
             top: 0;
             display: flex;
@@ -53,7 +62,9 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand navbar-left" href="#">List Away</a>
+        <a class="navbar-brand navbar-left font-weight-bold" href="#">
+            Lists
+        </a>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
@@ -82,23 +93,24 @@
         </div>
     </nav>
 
-    <div id="no-lists">
-        <h4 class="no-lists">No lists created yet.<br>
-        Try creating one!</h4>
-    </div>
-
     <!-- Where the lists will be stored. -->
     <ul id="list-container" class="list-group">
         <!--Add list items after #create-list-container -->
-        <li id="create-list-container" class="list-group-item">
+        <li id="create-list-container" class="list-group-item border-0">
             <!-- Button to create list -->
             <button type="button" id="create-list" class="btn btn-primary">
                 <img src="images/add.png">
             </button>
-            Create new list
+            <span class="font-weight-bold">Create new list</span>
         </li>
     </ul>
-    
+
+    <div id="no-lists">
+        <h4 class="no-lists">No lists created yet.<br>
+            Try creating one!
+        </h4>
+    </div>
+
     <script src="scripts/addList.js"></script>
     <script src="scripts/createUser.js"></script>
     <script>
