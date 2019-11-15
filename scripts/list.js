@@ -55,11 +55,16 @@ $(document).ready(function(){
 
     //create the list element
     function createNewList() {
-        let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-        //clone the button dropdown
-        let dropdown = $("#btn-dropdown").clone().show();
+        // let listItem = $("<li class=\"list-group-item border-0\">"
+        //         + "\n<span class=\"my-auto\">New List</span>"
+        //         + "\n</li>");
 
-        $(listItem).append(dropdown);
+        // //clone the button dropdown
+        // let dropdown = $("#btn-dropdown").clone().show();
+
+        // $(listItem).append(dropdown);
+        // $(listItem).insertBefore(createList);
+        let listItem = $("#list-clone").clone().show();
         $(listItem).insertBefore(createList);
     }
 });
