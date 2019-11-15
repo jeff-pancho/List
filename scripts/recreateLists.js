@@ -1,8 +1,8 @@
 $(document).ready(function() {
-    let lists = db.collection("users").doc(user.uid).collection("lists")
+    console.log("BRUHHHHHHHHHHH!");
 
     // when user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
-        
+        console.log("SUP");
     });
 });
