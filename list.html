@@ -1,90 +1,103 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <title>Lists</title>
+        <meta charset="utf-8">
 
-<head>
-    <title>Lists</title>
-    <meta charset="utf-8">
+        <!-- Bootstrap for Mobile-first, and JQuery -->
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-    <!-- Bootstrap for Mobile-first, and JQuery -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- Firebase -->
+        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
 
-    <!-- Firebase -->
-    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.2.1/firebase-auth.js"></script>
+        <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+        <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
 
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+        <!-- Firebase app config -->
+        <script src="scripts/firebaseConfig.js"></script>
 
-    <!-- Firebase app config -->
-    <script src="scripts/firebaseConfig.js"></script>
+        <style>
+            html,
+            body {
+                position: relative;
+                height: 100%;
+            }
 
-    <style>
-        html,
-        body {
-            position: relative;
-            height: 100%;
-        }
+            img {
+                max-width: 30px;
+            }
 
-        img {
-            max-width: 30px;
-        }
+            .navbar {
+                background-color: #4B9DE9 !important;
+            }
 
-        .navbar {
-            background-color: #4B9DE9 !important;
-        }
+            .list-group-item {
+                background-color: #E7F3FF;
+            }
 
-        .list-group-item {
-            background-color: #E7F3FF;
-        }
+            #no-lists {
+                pointer-events: none;
+                position: absolute;
+                top: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+    </head>
 
-        #no-lists {
-            pointer-events: none;
-            position: absolute;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-</head>
-
-<body>
-    <div id="nav-loader"></div>
-
-    <!-- Where the lists will be stored. -->
-    <ul id="list-container" class="list-group">
-        <!--Add list items after #create-list-container -->
-        <li id="create-list-container" class="list-group-item border-0">
-            <!-- Button to create list -->
-            <button type="button" id="create-list" class="btn btn-primary">
-                <img src="images/add.png">
+    <body>
+        <!-- Navigation bar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-start">
+            <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
             </button>
-            <span class="font-weight-bold">Create new list</span>
-        </li>
-    </ul>
+            <a class="navbar-brand navbar-left" href="#">List Away</a>
+            
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/list.html">Lists</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/events.html">Events</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-    <div id="no-lists">
-        <h4 class="no-lists">No lists created yet.<br>
-            Try creating one!
-        </h4>
-    </div>
+        <!-- Where the lists will be stored. -->
+        <ul id="list-container" class="list-group">
+            <!--Add list items after #create-list-container -->
+            <li id="create-list-container" class="list-group-item border-0">
+                <!-- Button to create list -->
+                <button type="button" id="create-list" class="btn btn-primary">
+                    <img src="images/add.png">
+                </button>
+                <span class="font-weight-bold">Create new list</span>
+            </li>
+        </ul>
 
-    <script src="scripts/addList.js"></script>
-    <script src="scripts/createUser.js"></script>
-    <script>
-        createUser();
-        $(function(){
-            $("#nav-loader").load("nav.html");
-        });
-    </script>
-</body>
+        <div id="no-lists">
+            <h4 class="no-lists">No lists created yet.<br>
+                Try creating one!
+            </h4>
+        </div>
 
+        <script src="scripts/addList.js"></script>
+        <script src="scripts/createUser.js"></script>
+        <script>
+            createUser();
+        </script>
+    </body>
 </html>
