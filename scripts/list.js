@@ -8,6 +8,7 @@ $(document).ready(function(){
     //pointer to the container that tells you if there are no lists
     var noLists = $("#no-lists");
     
+    
     //if user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
         //pointer to the user's list collection
@@ -20,8 +21,9 @@ $(document).ready(function(){
                 hideNoLists();
 
                 //append before #create-list-container
-                let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-                $(listItem).insertBefore(createList)
+                createNewList();
+                // let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
+                // $(listItem).insertBefore(createList)
             });
         });
     });
@@ -31,8 +33,9 @@ $(document).ready(function(){
         hideNoLists();
         
         //append before #create-list-container
-        let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-        $(listItem).insertBefore(createList)
+        createNewList();
+        // let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
+        // $(listItem).insertBefore(createList);
 
         //add new list to database
         firebase.auth().onAuthStateChanged(function(user) {
@@ -48,5 +51,15 @@ $(document).ready(function(){
         if($(noLists).is(":visible")) {
             $(noLists).hide();
         }
+    }
+
+    //create the list element
+    function createNewList() {
+        let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
+        //clone the button dropdown
+        let dropdown = $("#btn-dropdown").clone().show();
+
+        $(listItem).append(dropdown);
+        $(listItem).insertBefore(createList);
     }
 });
