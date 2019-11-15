@@ -16,8 +16,8 @@ $(document).ready(function(){
             $(noLists).hide();
         }
         
-        //append
-        let listItem = $("<li class=\"list-group-item\">New List</li>");
+        //append before #create-list-container
+        let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
         $(listItem).insertBefore(createList)
 
         //add new list to database
