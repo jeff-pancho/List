@@ -39,19 +39,41 @@
     <ul id="event-container" class="event-group">
         <!--Add event items before #create-event-container -->
         <li id="create-event-container" class="event-group-item">
-            <!-- Button to create list -->
-            <button type="button" id="create-event" class="btn btn-primary">
+            <!-- Button trigger modal to create event -->
+            <button type="button" id="create-event-open" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                 <img src="images/add.png">
             </button>
             <span class="font-weight-bold">Create new event</span>
         </li>
     </ul>
 
+    <!-- Create Event Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Create Event</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Surprise!
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- No events message. -->
     <div id="no-events">
         <h4>No events yet.<br>Try creating one!</h4>
     </div>
-    
+
     <script src="scripts/events.js"></script>
 </body>
 
