@@ -37,8 +37,8 @@
 
     <!-- Where the events will be stored. -->
     <ul id="event-container" class="event-group">
-        <!--Add event items after #create-event-container -->
-        <li id="create-event-container" class="event-group-item border-0">
+        <!--Add event items before #create-event-container -->
+        <li id="create-event-container" class="event-group-item">
             <!-- Button to create list -->
             <button type="button" id="create-event" class="btn btn-primary">
                 <img src="images/add.png">
@@ -51,7 +51,8 @@
     <div id="no-events">
         <h4>No events yet.<br>Try creating one!</h4>
     </div>
-
+    
+    <script src="scripts/events.js"></script>
 </body>
 
 </html>
