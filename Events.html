@@ -1,38 +1,57 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Events</title>
-        <meta charset="utf-8">
-        <!-- Bootstrap for Mobile-first, and JQuery -->
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="style/navbar-style.css"/>
-    </head>
-    <body>
-        <!-- Navigation bar -->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-start">
-            <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+<head>
+    <title>Events</title>
+    <meta charset="utf-8">
+    <!-- Bootstrap for Mobile-first, and JQuery -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="style/navbar-style.css" />
+    <link rel="stylesheet" type="text/css" href="style/events-style.css" />
+</head>
+
+<body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-start">
+        <button class="navbar-toggler mr-2" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a class="navbar-brand navbar-left" href="#">List Away</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="./list.html">Lists</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./events.html">Events</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Where the events will be stored. -->
+    <ul id="event-container" class="event-group">
+        <!--Add event items after #create-event-container -->
+        <li id="create-event-container" class="event-group-item border-0">
+            <!-- Button to create list -->
+            <button type="button" id="create-event" class="btn btn-primary">
+                <img src="images/add.png">
             </button>
-            <a class="navbar-brand navbar-left" href="#">List Away</a>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="./list.html">Lists</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="./events.html">Events</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+            <span class="font-weight-bold">Create new event</span>
+        </li>
+    </ul>
 
-        <h2>THESE ARE EVENTSSS</h2>
+    <!-- No events message. -->
+    <div id="no-events">
+        <h4>No events yet.<br>Try creating one!</h4>
+    </div>
 
-    </body>
+</body>
+
 </html>

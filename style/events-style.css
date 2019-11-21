@@ -1,0 +1,23 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+#no-events {
+    text-align: center;
+}
+
+img {
+    max-width: 30px;
+}
+
+#event-container {
+    list-style-type: none;
+    padding: 0;
+}
+
+.event-group-item {
+    background-color: #E7F3FF;
+    padding: 9pt 15pt;
+}
