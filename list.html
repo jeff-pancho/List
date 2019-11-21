@@ -24,8 +24,7 @@
 
         <link rel="stylesheet" type="text/css" href="style/navbar-style.css"/>
         <style>
-            html,
-            body {
+            html, body {
                 position: relative;
                 height: 100%;
             }
@@ -91,25 +90,32 @@
         </div>
 
         <!-- Hidden dropdown list item to be cloned -->
-        <div id="btn-dropdown" class="float-right"">
-            <button class="btn float-right"
-            type="button" id="dropdownMenu1" data-toggle="dropdown"
-            aria-haspopup="true" aria-expanded="false">
-                <img src="images/three-dots.png">
+        <li id="list-clone" class="list-group-item border-0">
+            <button class="btn float-left">
+                <img src="images/drop-down.png">
             </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <a class="dropdown-item" href="#!">Modify List</a>
-                <a class="dropdown-item" href="#!">Archive List</a>
-                <a class="dropdown-item" href="#!">Delete List</a>
+            <span>New List</span>
+            <div id="btn-dropdown" class="float-right"">
+                <button class="btn float-right"
+                type="button" id="dropdownMenu1" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                    <img src="images/three-dots.png">
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <a class="dropdown-item" href="#!">Modify List</a>
+                    <a class="dropdown-item" href="#!">Archive List</a>
+                    <a class="dropdown-item" href="#!">Delete List</a>
+                </div>
             </div>
-        </div>
+        </li>
 
         
         <script src="scripts/list.js"></script>
         <script src="scripts/createUser.js"></script>
         <script>
-            createUser();
-            $("#btn-dropdown").hide();
+                createUser();
+                $("#list-clone").hide();
+                // $("#btn-dropdown").hide();
         </script>
     </body>
 </html>
