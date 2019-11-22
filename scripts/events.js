@@ -16,6 +16,9 @@ $(document).ready(function() {
     // pointer to the "Event description" form in the modal thingabadingaling
     const eventDescriptionForm = $("#event-description")
 
+    // number of events currently loaded
+    let eventsCount = 0;
+
     // Placeholder event
     const eventItem = $("#placeholder");
 
@@ -45,7 +48,7 @@ $(document).ready(function() {
     });
 
     // When clicking the "Save Changes" button on the modal.
-    $(saveChanges).click(function (event) {
+    $(saveChanges).click(function () {
         //save the values of the inputs
         let eventName = $(eventNameForm).val();
         let eventPriority = $(selectPriority).val();
@@ -73,8 +76,26 @@ $(document).ready(function() {
         let clone = eventItem.clone().show()
         $(clone).find("p").html(name);
         $(clone).find(".down").hide();
-
+        
+        // set unique id for the collapsible
+        $(clone).find(".collapse").attr("id", "collapse-" + eventsCount);
+        // set target of the button to the unique collapsible id
+        $(clone).find(".btn").attr("href", "#collapse-" + eventsCount);
+        // bind click event to button
+        $(clone).find(".btn").click(function() {
+            // toggle between the up and down image of the dropdown button
+            console.log("test")
+            if ($(this).find(".up").is(":visible")) {
+                $(this).find(".up").hide();
+                $(this).find(".down").show();
+            } else {
+                $(this).find(".up").show();
+                $(this).find(".down").hide();
+            }
+        });
         $(clone).insertBefore(createEvent);
+
+        eventsCount++;
     }
 
     // Hides the "No Events" message
@@ -83,5 +104,4 @@ $(document).ready(function() {
             noEvents.hide();
         }
     }
-
 });

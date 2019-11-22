@@ -102,11 +102,24 @@
 
     <!-- Placeholder event item -->
     <li id="placeholder" class="event-group-item">
-        <button class="btn float-left">
+        <button class="btn float-left drop-down-btn" data-toggle="collapse" href="#test">
             <img class="up" src="images/drop-down-up.png">
             <img class="down" src="images/drop-down-down.png">
         </button>
         <p></p>
+        <div class="collapse">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    PUNK ASS
+                </li>
+                <li class="list-group-item">
+                    SWAMP ASS
+                </li>
+                <li class="list-group-item">
+                    SMELLY ASS
+                </li>
+            </ul>
+        </div>
     </li>
 
     <!-- No events message. -->
@@ -119,6 +132,7 @@
         $("#placeholder").hide();
     </script>
     <script src="scripts/events.js"></script>
+    <script src="scripts/buttonDropdown.js"></script>
     
 </body>
 
