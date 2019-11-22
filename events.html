@@ -100,6 +100,15 @@
         </div>
     </div>
 
+    <!-- Placeholder event item -->
+    <li id="placeholder" class="event-group-item">
+        <button class="btn float-left">
+            <img class="up" src="images/drop-down-up.png">
+            <img class="down" src="images/drop-down-down.png">
+        </button>
+        <p></p>
+    </li>
+
     <!-- No events message. -->
     <div id="no-events">
         <h4>No events yet.<br>Try creating one!</h4>
@@ -107,6 +116,7 @@
     <script src="scripts/createUser.js"></script>
     <script>
         createUser();
+        $("#placeholder").hide();
     </script>
     <script src="scripts/events.js"></script>
     

@@ -1,43 +1,35 @@
 $(document).ready(function() {
     // pointer to container holding the events
     const eventContainer = $("#event-container");
-
     // pointer to container create new event container
     const createEvent = $("#create-event-container");
-
     // pointer to create event button
     const createEventButton = $("#create-event-open");
-
     // pointer to "No Events" messgae
     const noEvents = $("#no-events");
-
     // pointer to "Save Changes" button in modal form
     const saveChanges = $("#save-changes");
-
     // pointer to the "Event name" form in the modal thing
     const eventNameForm = $("#event-name");
-
     // pointer to the "Select priority" form in the modal thingamajig
     const selectPriority = $("#select-priority");
-
     // pointer to the "Event description" form in the modal thingabadingaling
     const eventDescriptionForm = $("#event-description")
 
-
     // Placeholder event
-    const eventItem = $("<li class='event-group-item'>New Event</li>");
+    const eventItem = $("#placeholder");
 
     //if user is authenticated
     firebase.auth().onAuthStateChanged(function(user) {
-        //pointer to the user's list collection
+        hideNoEventsMessage();
+        
+        //pointer to the user's events collection
         let events = db.collection("users").doc(user.uid).collection("events");
 
-        //capture a snapshot of the lists collection
+        //capture a snapshot of the events collection
         events.get().then(function(doc){
-            //execute a function for each child of the lists collectin
+            //execute a function for each child of the event collectin
             doc.forEach(function(child){
-                // console.log(child);
-
                 let name = child.data().name;
                 let priority = child.data().priority;
                 let description = child.data().description;
@@ -46,22 +38,14 @@ $(document).ready(function() {
                 console.log(priority);
                 console.log(description);
 
-                //append before #create-list-container
-                addEvent(name, priority, description);
-                // let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-                // $(listItem).insertBefore(createList)
+                //append before #create-event-container
+                createNewEvent(name, priority, description);
             });
         });
     });
 
-    // Button click event handler for creating event
-    // createEventButton.click(addEvent);
-
     // When clicking the "Save Changes" button on the modal.
     $(saveChanges).click(function (event) {
-        //prevent the submit button from refreshing the page
-        // event.preventDefault();
-
         //save the values of the inputs
         let eventName = $(eventNameForm).val();
         let eventPriority = $(selectPriority).val();
@@ -76,7 +60,7 @@ $(document).ready(function() {
             });
         });
 
-        addEvent(eventName, eventPriority, eventDescription);
+        createNewEvent(eventName, eventPriority, eventDescription);
 
         // Reset values of input forms
         $(eventName).val("");
@@ -84,28 +68,13 @@ $(document).ready(function() {
         $(eventDescription).val("");
     });
 
-    function addEvent(name, priority, description) {
-        hideNoEventsMessage();
-        createNewEvent(name, priority, description);
-    }
-
     // Adds a new event to the list
     function createNewEvent(name, priority, description) {
-        let clone = eventItem.clone()
-        $(clone).html(name);
+        let clone = eventItem.clone().show()
+        $(clone).find("p").html(name);
+        $(clone).find(".down").hide();
 
         $(clone).insertBefore(createEvent);
-    }
-    
-    function saveEvent(event) {
-        // console.log("swag");
-        // let eventName = $(eventNameForm).val();
-        // let eventPriority = $(selectPriority).val();
-        // let eventDescription = $(eventDescriptionForm).val();
-
-        // console.log(eventName);
-        // console.log(eventPriority);
-        // console.log(eventDescription);
     }
 
     // Hides the "No Events" message
