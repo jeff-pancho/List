@@ -4,11 +4,15 @@ html, body {
     margin: 0;
 }
 
+#logo {
+    width: 90pt;
+}
+
 #no-events {
     text-align: center;
 }
 
-img {
+button img {
     max-width: 30px;
 }
 

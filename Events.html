@@ -22,7 +22,9 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <a class="navbar-brand navbar-left" href="#">List Away</a>
+        <a class="navbar-brand" href="#">
+            <img src="images/brand-logo.png" id="logo" />
+        </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
@@ -40,7 +42,8 @@
         <!--Add event items before #create-event-container -->
         <li id="create-event-container" class="event-group-item">
             <!-- Button trigger modal to create event -->
-            <button type="button" id="create-event-open" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            <button type="button" id="create-event-open" class="btn btn-primary" data-toggle="modal"
+                data-target="#exampleModal">
                 <img src="images/add.png">
             </button>
             <span class="font-weight-bold">Create new event</span>
@@ -59,7 +62,25 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    Surprise!
+                    <form>
+                        <div class="form-group">
+                            <label>Event name</label>
+                            <input type="text" class="form-control" placeholder="Enter event name..." required>
+                        </div>
+                        <div class="form-group">
+                            <label>Select priority</label>
+                            <select class="form-control">
+                                <option>Low</option>
+                                <option>Medium</option>
+                                <option>High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Event description</label>
+                            <textarea class="form-control" rows="3">
+                            </textarea>
+                        </div>
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
