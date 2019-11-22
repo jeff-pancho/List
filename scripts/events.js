@@ -77,6 +77,11 @@ $(document).ready(function() {
         });
 
         addEvent(eventName, eventPriority, eventDescription);
+
+        // Reset values of input forms
+        $(eventName).val("");
+        $(eventPriority).val("");
+        $(eventDescription).val("");
     });
 
     function addEvent(name, priority, description) {
