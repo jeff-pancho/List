@@ -90,7 +90,7 @@ $(document).ready(function () {
 
         // Reset values of input forms
         $(eventName).val("");
-        // $(eventDate).val("");
+        $(date_input).datepicker('update', '');
         $(eventPriority).val("");
         $(eventDescription).val("");
     });
