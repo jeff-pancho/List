@@ -11,6 +11,8 @@ $(document).ready(function () {
     const saveChanges = $("#save-changes");
     // pointer to the "Event name" form in the modal thing
     const eventNameForm = $("#event-name");
+    // pointer to the "Event date" form in the modal thing
+    const eventDateForm = $("#event-date");
     // pointer to the "Select priority" form in the modal thingamajig
     const selectPriority = $("#select-priority");
     // pointer to the "Event description" form in the modal thingabadingaling
@@ -24,12 +26,16 @@ $(document).ready(function () {
 
     // Datepicker setup
     var date_input = $('input[name="date"]'); //our date input has the name "date"
-    var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+    // var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
     var options = {
         format: 'mm/dd/yyyy',
-        container: container,
+        // container: container,
         todayHighlight: true,
         autoclose: true,
+        toggleActive: true,
+        defaultViewDate: {  year: new Date().getFullYear(),
+                            month: new Date().getMonth(),
+                            day: new Date().getDate() }
     };
     date_input.datepicker(options);
 
@@ -42,19 +48,23 @@ $(document).ready(function () {
 
         //capture a snapshot of the events collection
         events.get().then(function (doc) {
-            //execute a function for each child of the event collectin
-            doc.forEach(function (child) {
-                let name = child.data().name;
-                let priority = child.data().priority;
-                let description = child.data().description;
-
-                console.log(name);
-                console.log(priority);
-                console.log(description);
-
-                //append before #create-event-container
-                createNewEvent(name, priority, description);
-            });
+            if (doc.length > 0) {
+                //execute a function for each child of the event collectin
+                doc.forEach(function (child) {
+                    let name = child.data().name;
+                    let date = child.data().date;
+                    let priority = child.data().priority;
+                    let description = child.data().description;
+    
+                    console.log(name);
+                    console.log(date);
+                    console.log(priority);
+                    console.log(description);
+    
+                    //append before #create-event-container
+                    createNewEvent(name, date, priority, description);
+                });
+            }
         });
     });
 
@@ -62,6 +72,7 @@ $(document).ready(function () {
     $(saveChanges).click(function () {
         //save the values of the inputs
         let eventName = $(eventNameForm).val();
+        let eventDate = $(eventDateForm).val();
         let eventPriority = $(selectPriority).val();
         let eventDescription = $(eventDescriptionForm).val();
 
@@ -69,23 +80,28 @@ $(document).ready(function () {
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("events").add({
                 "name": eventName,
+                "date": eventDate,
                 "priority": eventPriority,
                 "description": eventDescription
             });
         });
 
-        createNewEvent(eventName, eventPriority, eventDescription);
+        createNewEvent(eventName, eventDate, eventPriority, eventDescription);
 
         // Reset values of input forms
         $(eventName).val("");
+        // $(eventDate).val("");
         $(eventPriority).val("");
         $(eventDescription).val("");
     });
 
     // Adds a new event to the list
-    function createNewEvent(name, priority, description) {
+    function createNewEvent(name, date, priority, description) {
         let clone = eventItem.clone().show()
-        $(clone).find("p").html(name);
+        $(clone).find("#item-name").html(name);
+        $(clone).find("#item-date").html(date);
+        $(clone).find("#item-priority").html("<b>Priority: </b>" + priority);
+        $(clone).find("#item-description").html("<b>Description: </b>" + description);
         $(clone).find(".down").hide();
 
         // set unique id for the collapsible
