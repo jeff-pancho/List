@@ -91,7 +91,7 @@
                         <div class="form-group">
                             <!-- Date input -->
                             <label class="control-label" for="date">Date</label>
-                            <input class="form-control" id="date" name="date" placeholder="MM/DD/YYY" type="text" />
+                            <input class="form-control" id="event-date" name="date" placeholder="MM/DD/YYY" type="text" />
                         </div>
                         <div class="form-group">
                             <label>Select priority</label>
@@ -122,16 +122,16 @@
             <img class="up" src="images/drop-down-up.png">
             <img class="down" src="images/drop-down-down.png">
         </button>
-        <p></p>
+        <p id="item-name"></p>
         <div class="collapse">
             <ul class="list-group">
-                <li class="list-group-item">
+                <li id="item-date" class="list-group-item">
                     Date: The foreseeable future
                 </li>
-                <li class="list-group-item">
+                <li id="item-description" class="list-group-item">
                     Description: Walk the cat
                 </li>
-                <li class="list-group-item">
+                <li id="item-priority" class="list-group-item">
                     Priority: SUPER URGENT OMG GO DO IT NOW DROP WHATEVER YOU ARE DOING RIGHT NOW
                 </li>
             </ul>
