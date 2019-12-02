@@ -39,7 +39,7 @@
 
             #task-container {
                 overflow-y: scroll;
-                max-height: 50vh;
+                height: 50vh;
             }
 
             #no-lists {
@@ -95,45 +95,80 @@
             </h4>
         </div>
 
+        <!-- Modal to create the list -->
         <div class="modal fade" id="example-modal" tabindex="-1" role="dialog" aria-labelledby="example-modal-label"
         aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="example-modal-label">Create Event</h5>
-                        <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> -->
                     </div>
                     <form>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>List name</label>
-                                <input type="text" id="event-name" class="form-control" placeholder="Enter list name..."
+                                <input type="text" id="list-name" class="form-control" placeholder="Enter list name..."
                                     required>
                             </div>
-                            <div>
+                            <!-- <div id="tasks-field">
                                 <label>Tasks</label>
+                                <button type="button" id="create-task" class="btn btn-sm btn-primary">
+                                    <img src="images/add.png">
+                                </button>
                                 <ul id="task-container" class="list-group">
                                     <li class="task list-group-item">
                                         TEST
                                     </li>
                                     <li id="create-task-container" class="list-group-item">
-                                        <!-- Button to create task -->
                                         <button type="button" id="create-task" class="btn btn-primary">
                                             <img src="images/add.png">
                                         </button>
                                         <span class="font-weight-bold">Create new task</span>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button id="save-changes" type="submit" class="btn btn-primary" data-dismiss="modal">Save
-                                changes</button>
+                            <button type="button" id="cancel-create-list" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="list-save-changes" type="submit" class="btn btn-primary" data-dismiss="modal" data-toggle="modal" data-target="#tasks-modal">
+                                Save changes</button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="tasks-modal" tabindex="-1" role="dialog" aria-labelledby="example-modal-label"
+        aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="example-modal-label">Manage Tasks</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tasks-field">
+                            <label>Tasks</label>
+                            <button type="button" id="create-task" class="btn btn-sm btn-primary">
+                                <img src="images/add.png">
+                            </button>
+                            <ul id="task-container" class="list-group">
+                                <li class="task list-group-item">
+                                    TEST
+                                </li>
+                                <!-- <li id="create-task-container" class="list-group-item">
+                                    <button type="button" id="create-task" class="btn btn-primary">
+                                        <img src="images/add.png">
+                                    </button>
+                                    <span class="font-weight-bold">Create new task</span>
+                                </li> -->
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="cancel-create-tasks" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="task-save-changes" type="submit" class="btn btn-primary" data-dismiss="modal">
+                            Save changes</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -159,12 +194,18 @@
             </div>
         </li>
 
+        <!-- task item to be cloned -->
+        <li id="task-clone" class="task list-group-item">
+            <input type="text" class="task-name w-100">
+        </li>
+
 
         <script src="scripts/list.js"></script>
         <script src="scripts/createUser.js"></script>
         <script>
                 createUser();
                 $("#list-clone").hide();
+                $("#task-clone").hide();
                 // $("#btn-dropdown").hide();
         </script>
     </body>

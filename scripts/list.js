@@ -1,12 +1,22 @@
 $(document).ready(function(){
-    //pointer to the list container
-    var listContainer = $("#list-container");
-    //pointer to the container that holds the create list button
-    var createList = $("#create-list-container");
-    //pointer to the create list button
-    var createListButton = $("#create-list");
-    //pointer to the container that tells you if there are no lists
-    var noLists = $("#no-lists");
+    // pointer to the list container
+    const listContainer = $("#list-container");
+    // pointer to the container that holds the create list button
+    const createList = $("#create-list-container");
+    // pointer to the create list button
+    const createListButton = $("#create-list");
+    // pointer to the container that tells you if there are no lists
+    const noLists = $("#no-lists");
+    // pointer to "Save Changes" button in modal form
+    const saveChanges = $("#save-changes");
+    // pointer to the "List name" form
+    const listNameForm = $("#list-name");
+    // pointer to the create task button inside the modal form
+    const createTaskButton = $("#create-task");
+    // pointer to the task field in the modal form
+    const taskContainer = $("#task-container");
+    // pointer to the cancel button in the modal form for tasks
+    const cancelCreateTasks = $("#cancel-create-tasks");
     
     
     //if user is authenticated
@@ -16,17 +26,42 @@ $(document).ready(function(){
 
         //capture a snapshot of the lists collection
         lists.get().then(function(doc){
-            //execute a function for each child of the lists collectin
-            doc.forEach(function(child){
+            if (doc.size > 0) {
                 hideNoLists();
-
-                //append before #create-list-container
-                createNewList();
-                // let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-                // $(listItem).insertBefore(createList)
-            });
+                //execute a function for each child of the lists collectin
+                doc.forEach(function(child){
+                    //append before #create-list-container
+                    createNewList();
+                });
+            }
         });
     });
+
+    $(saveChanges).click(function() {
+        // save the value of the input
+        let listName = $(listNameForm).val();
+        console.log(listName);
+
+        // reset the value of input
+        $(listName).val("");
+    });
+
+    $(createTaskButton).click(function() {
+        console.log($(listNameForm).val());
+        addTask();
+    });
+
+    $(cancelCreateTasks).click(function() {
+        $(taskContainer).empty();
+    });
+
+    function addTask() {
+        let taskItem = $("#task-clone").clone().show();
+        console.log(taskItem);
+        $(taskContainer).append(taskItem);
+    }
+
+
 
     // $(createListButton).click(addList);
     function addList() {
@@ -34,8 +69,6 @@ $(document).ready(function(){
         
         //append before #create-list-container
         createNewList();
-        // let listItem = $("<li class=\"list-group-item border-0\">New List</li>");
-        // $(listItem).insertBefore(createList);
 
         //add new list to database
         firebase.auth().onAuthStateChanged(function(user) {
