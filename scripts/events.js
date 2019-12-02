@@ -41,25 +41,19 @@ $(document).ready(function () {
 
     //if user is authenticated
     firebase.auth().onAuthStateChanged(function (user) {
-        hideNoEventsMessage();
-
         //pointer to the user's events collection
         let events = db.collection("users").doc(user.uid).collection("events");
 
         //capture a snapshot of the events collection
         events.get().then(function (doc) {
-            if (doc.length > 0) {
+            if (doc.size > 0) {
+                hideNoEventsMessage();
                 //execute a function for each child of the event collectin
                 doc.forEach(function (child) {
                     let name = child.data().name;
                     let date = child.data().date;
                     let priority = child.data().priority;
                     let description = child.data().description;
-    
-                    console.log(name);
-                    console.log(date);
-                    console.log(priority);
-                    console.log(description);
     
                     //append before #create-event-container
                     createNewEvent(name, date, priority, description);
