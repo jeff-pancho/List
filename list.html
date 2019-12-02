@@ -30,7 +30,7 @@
             }
 
             img {
-                max-width: 30px;
+                max-width: 25px;
             }
 
             .list-group-item {
@@ -138,6 +138,7 @@
             </div>
         </div>
 
+        <!-- Modal to create the tasks after creating list -->
         <div class="modal fade" id="tasks-modal" tabindex="-1" role="dialog" aria-labelledby="example-modal-label"
         aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -148,19 +149,15 @@
                     <div class="modal-body">
                         <div id="tasks-field">
                             <label>Tasks</label>
-                            <button type="button" id="create-task" class="btn btn-sm btn-primary">
-                                <img src="images/add.png">
-                            </button>
+                            <div class="form-group">
+                                <label>Task name: </label>
+                                <input type="text" id="task-name-form" class="task-name w-50">
+                                <button type="button" id="create-task" class="btn btn-sm btn-primary">
+                                    <img src="images/add.png">
+                                </button>
+                            </div>
                             <ul id="task-container" class="list-group">
-                                <li class="task list-group-item">
-                                    TEST
-                                </li>
-                                <!-- <li id="create-task-container" class="list-group-item">
-                                    <button type="button" id="create-task" class="btn btn-primary">
-                                        <img src="images/add.png">
-                                    </button>
-                                    <span class="font-weight-bold">Create new task</span>
-                                </li> -->
+                                <!-- Where to store tasks in the modal form -->
                             </ul>
                         </div>
                     </div>
@@ -196,7 +193,10 @@
 
         <!-- task item to be cloned -->
         <li id="task-clone" class="task list-group-item">
-            <input type="text" class="task-name w-100">
+            <span></span>
+            <button type="button" class="trash-list btn btn-sm float-right">
+                <img src="images/trash-can.png">
+            </button>
         </li>
 
 

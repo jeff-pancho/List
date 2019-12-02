@@ -15,6 +15,8 @@ $(document).ready(function(){
     const createTaskButton = $("#create-task");
     // pointer to the task field in the modal form
     const taskContainer = $("#task-container");
+    // pointer to the "Task name" form
+    const taskNameForm = $("#task-name-form");
     // pointer to the cancel button in the modal form for tasks
     const cancelCreateTasks = $("#cancel-create-tasks");
     
@@ -47,24 +49,34 @@ $(document).ready(function(){
     });
 
     $(createTaskButton).click(function() {
-        console.log($(listNameForm).val());
-        addTask();
+        // if the "Task name" form is filled out
+        if ($(taskNameForm).val()) {
+            let taskName = $(taskNameForm).val();
+            // reset the form
+            $(taskNameForm).val("");
+            addTaskToForm(taskName);
+        }
     });
+    
 
     $(cancelCreateTasks).click(function() {
         $(taskContainer).empty();
     });
 
-    function addTask() {
+    function addTaskToForm(taskName) {
         let taskItem = $("#task-clone").clone().show();
-        console.log(taskItem);
+        $(taskItem).find("span").html(taskName);
+        // trash can button to delete itself
+        $(taskItem).find("button").click(function() {
+            $(this).parent().remove();
+        });
+
         $(taskContainer).append(taskItem);
+        // scroll the div down to the bottom after creating task
+        $(taskContainer).scrollTop(1000000);
     }
 
-
-
-    // $(createListButton).click(addList);
-    function addList() {
+    function addList(listName) {
         hideNoLists();
         
         //append before #create-list-container
