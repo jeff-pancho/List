@@ -28,7 +28,7 @@ $(document).ready(function(){
         });
     });
 
-    $(createListButton).click(addList);
+    // $(createListButton).click(addList);
     function addList() {
         hideNoLists();
         
