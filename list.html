@@ -33,8 +33,12 @@
                 max-width: 25px;
             }
 
-            .list-group-item {
+            .list {
                 background-color: #E7F3FF;
+            }
+
+            .list-group {
+                list-style: none;
             }
 
             #task-container {
@@ -53,6 +57,15 @@
                 width: 100%;
                 height: 100%;
             }
+
+            .list-name {
+                margin: 0;
+                display: inline-block;
+            }
+
+            /* .task-item {
+                padding: 9pt 15pt;
+            }  */
         </style>
     </head>
 
@@ -79,7 +92,7 @@
         <!-- Where the lists will be stored. -->
         <ul id="list-container" class="list-group">
             <!--Add list items after #create-list-container -->
-            <li id="create-list-container" class="list-group-item border-0">
+            <li id="create-list-container" class="list list-group-item border-0">
                 <!-- Button to create list -->
                 <button type="button" id="create-list" class="btn btn-primary" data-toggle="modal"
                     data-target="#example-modal">
@@ -173,12 +186,12 @@
         </div>
 
         <!-- List item to be cloned  -->
-        <li id="list-clone" class="list-group-item border-0">
-            <button class="btn float-left drop-down-btn">
+        <li id="list-clone" class="list list-group-item border-0">
+            <button class="btn float-left drop-down-btn" data-toggle="collapse" href>
                 <img class="up" src="images/drop-down-up.png">
                 <img class="down" src="images/drop-down-down.png">
             </button>
-            <span>New List</span>
+            <p id="item-name" class="list-name">New List</p>
             <div id="btn-dropdown" class="float-right">
                 <button class="btn float-right"
                 type="button" id="dropdownMenu1" data-toggle="dropdown"
@@ -191,10 +204,15 @@
                     <a class="dropdown-item" href="#!">Delete List</a>
                 </div>
             </div>
+            <div class="collapse">
+                <ul class="list-group task-list-container">
+
+                </ul>
+            </div>
         </li>
 
         <!-- task item to be cloned -->
-        <li id="task-clone" class="task list-group-item">
+        <li id="task-clone" class="task-item list-group-item">
             <span></span>
             <button type="button" class="trash-list btn btn-sm float-right">
                 <img src="images/trash-can.png">
