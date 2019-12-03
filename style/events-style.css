@@ -16,6 +16,11 @@ button img {
     max-width: 30px;
 }
 
+p {
+    display: inline-block;
+    margin: 0 0 0 15px;
+}
+
 #event-container {
     list-style-type: none;
     padding: 0;
@@ -23,5 +28,9 @@ button img {
 
 .event-group-item {
     background-color: #E7F3FF;
+    padding: 9pt 15pt;
+}
+
+.list-group {
     padding: 9pt 15pt;
 }

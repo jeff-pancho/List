@@ -29,8 +29,17 @@
                 height: 100%;
             }
 
+            #logo {
+                width: 90pt !important;
+            }
+
             img {
-                max-width: 25px;
+                width: 25px;
+            }
+
+            p {
+                display: inline-block;
+                margin: 0 0 0 15px !important;
             }
 
             .list {
@@ -64,12 +73,16 @@
             }
 
             .task-list-container {
-                padding-top: 30px;
+                padding: 9pt 15pt;
             }
 
-            /* .task-item {
-                padding: 9pt 15pt;
-            }  */
+            #list-clone {
+                display: none !important;
+            }
+
+            #task-clone {
+                display: none !important;
+            }
         </style>
     </head>
 
@@ -127,23 +140,6 @@
                                 <input type="text" id="list-name" class="form-control" placeholder="Enter list name..."
                                     required>
                             </div>
-                            <!-- <div id="tasks-field">
-                                <label>Tasks</label>
-                                <button type="button" id="create-task" class="btn btn-sm btn-primary">
-                                    <img src="images/add.png">
-                                </button>
-                                <ul id="task-container" class="list-group">
-                                    <li class="task list-group-item">
-                                        TEST
-                                    </li>
-                                    <li id="create-task-container" class="list-group-item">
-                                        <button type="button" id="create-task" class="btn btn-primary">
-                                            <img src="images/add.png">
-                                        </button>
-                                        <span class="font-weight-bold">Create new task</span>
-                                    </li>
-                                </ul>
-                            </div> -->
                         </div>
                         <div class="modal-footer">
                             <button type="button" id="cancel-create-list" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -183,7 +179,8 @@
                     <div class="modal-footer">
                         <button type="button" id="cancel-create-tasks" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button id="task-save-changes" type="submit" class="btn btn-primary" data-dismiss="modal">
-                            Save changes</button>
+                            Save changes
+                        </button>
                     </div>
                 </div>
             </div>
@@ -191,35 +188,41 @@
 
         <!-- List item to be cloned  -->
         <li id="list-clone" class="list list-group-item border-0">
-            <button class="btn float-left drop-down-btn" data-toggle="collapse" href>
-                <img class="up" src="images/drop-down-up.png">
-                <img class="down" src="images/drop-down-down.png">
-            </button>
-            <p id="item-name" class="list-name">New List</p>
-            <div id="btn-dropdown" class="float-right">
-                <button class="btn float-right"
-                type="button" id="dropdownMenu1" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-                    <img src="images/three-dots.png">
+            <div class="d-flex align-items-center">
+                <button class="btn float-left drop-down-btn" data-toggle="collapse" href>
+                    <img class="up" src="images/drop-down-up.png">
+                    <img class="down" src="images/drop-down-down.png">
                 </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <a class="dropdown-item" href="#!">Modify List</a>
-                    <a class="dropdown-item" href="#!">Archive List</a>
-                    <a class="dropdown-item" href="#!">Delete List</a>
+                <p id="item-name" class="list-name">New List</p>
+                <div id="btn-dropdown" class="ml-auto">
+                    <button class="btn float-right"
+                    type="button" id="dropdownMenu1" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                        <img src="images/three-dots.png">
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <a class="dropdown-item" href="#!">Modify List</a>
+                        <a class="dropdown-item" href="#!">Archive List</a>
+                        <a class="dropdown-item" href="#!">Delete List</a>
+                    </div>
                 </div>
             </div>
+            
             <div class="collapse">
                 <ul class="list-group task-list-container">
-
+                    <!-- The place to store the tasks in a list dropdown -->
                 </ul>
             </div>
         </li>
 
         <!-- task item to be cloned -->
-        <li id="task-clone" class="task-item list-group-item">
-            <span></span>
-            <button type="button" class="trash-list btn btn-sm float-right">
+        <li id="task-clone" class="task-item list-group-item d-flex align-items-center" style="display: none;">
+            <p class=""></p>
+            <button type="button" class="trash-list btn btn-sm ml-auto">
                 <img src="images/trash-can.png">
+            </button>
+            <button type="button" class="check-mark btn btn-sm ml-auto">
+                <img src="images/check-mark.png">
             </button>
         </li>
 

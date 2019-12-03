@@ -96,9 +96,9 @@ $(document).ready(function(){
     function addTaskToForm(taskName) {
         let taskItem = $("#task-clone").clone().show();
         $(taskItem).removeAttr("id");
+        $(taskItem).find(".check-mark").remove();
         $(taskItem).addClass("list");
-
-        $(taskItem).find("span").html(taskName);
+        $(taskItem).find("p").html(taskName);
         // trash can button to delete itself
         $(taskItem).find("button").click(function() {
             $(this).parent().remove();
@@ -164,8 +164,8 @@ $(document).ready(function(){
         taskArray.forEach(function(task) {
             let taskClone = $("#task-clone").clone().show();
             $(taskClone).removeAttr("id");
-            $(taskClone).find("button").remove();
-            $(taskClone).find("span").html(task);
+            $(taskClone).find(".trash-list").remove();
+            $(taskClone).find("p").html(task);
             $(taskListContainer).append(taskClone);
         });
     }
