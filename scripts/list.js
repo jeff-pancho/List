@@ -48,7 +48,9 @@ $(document).ready(function(){
         $(listName).val("");
     });
 
-    $(createTaskButton).click(function() {
+    $("#create-task-modal-form").click(function(e) {
+        e.preventDefault();
+    // $(createTaskButton).click(function() {
         // if the "Task name" form is filled out
         if ($(taskNameForm).val()) {
             let taskName = $(taskNameForm).val();

@@ -151,10 +151,12 @@
                             <label>Tasks</label>
                             <div class="form-group">
                                 <label>Task name: </label>
-                                <input type="text" id="task-name-form" class="task-name w-50">
-                                <button type="button" id="create-task" class="btn btn-sm btn-primary">
-                                    <img src="images/add.png">
-                                </button>
+                                <form id="create-task-modal-form">
+                                    <input type="text" id="task-name-form" class="task-name w-50">
+                                    <button type="submit" id="create-task" class="btn btn-sm btn-primary">
+                                        <img src="images/add.png">
+                                    </button>
+                                </form>
                             </div>
                             <ul id="task-container" class="list-group">
                                 <!-- Where to store tasks in the modal form -->
