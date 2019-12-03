@@ -40,8 +40,11 @@ $(document).ready(function(){
                 hideNoLists();
                 //execute a function for each child of the lists collectin
                 doc.forEach(function(child){
-                    //append before #create-list-container
-                    createNewList("hello", []);
+                    let name = child.data().name;
+                    let taskArray = child.data().tasks;
+
+                    // create list
+                    createNewList(name, taskArray);
                 });
             }
         });
@@ -66,6 +69,7 @@ $(document).ready(function(){
         }
     });
 
+    // Save the new list and tasks
     $(taskSaveChanges).click(function() {
         // Variable to save the names of each task.
         let tasks = [];
@@ -91,6 +95,8 @@ $(document).ready(function(){
      */
     function addTaskToForm(taskName) {
         let taskItem = $("#task-clone").clone().show();
+        $(taskItem).removeAttr("id");
+        $(taskItem).addClass("list");
 
         $(taskItem).find("span").html(taskName);
         // trash can button to delete itself
@@ -114,13 +120,14 @@ $(document).ready(function(){
         //append before #create-list-container
         createNewList(listName, taskArray);
 
-        //add new list to database
-        // firebase.auth().onAuthStateChanged(function(user) {
-        //     db.collection("users").doc(user.uid).collection("lists").add({
-        //         "name": listName,
-        //         "status": "active"
-        //     });
-        // });
+        // add new list to database
+        firebase.auth().onAuthStateChanged(function(user) {
+            db.collection("users").doc(user.uid).collection("lists").add({
+                "name": listName,
+                "tasks": taskArray,
+                "status": "active"
+            });
+        });
     }
 
     /**
@@ -130,6 +137,7 @@ $(document).ready(function(){
      */
     function createNewList(listName, taskArray) {
         let clone = $("#list-clone").clone().show();
+        $(clone).removeAttr("id");
         $(clone).find(".down").hide();
         $(clone).find(".list-name").html(listName);
 
@@ -155,6 +163,8 @@ $(document).ready(function(){
         let taskListContainer = $(clone).find(".task-list-container");
         taskArray.forEach(function(task) {
             let taskClone = $("#task-clone").clone().show();
+            $(taskClone).removeAttr("id");
+            $(taskClone).find("button").remove();
             $(taskClone).find("span").html(task);
             $(taskListContainer).append(taskClone);
         });
