@@ -22,68 +22,9 @@
         <!-- Firebase app config -->
         <script src="scripts/firebaseConfig.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="style/navbar-style.css"/>
-        <style>
-            html, body {
-                position: relative;
-                height: 100%;
-            }
-
-            #logo {
-                width: 90pt !important;
-            }
-
-            img {
-                width: 25px;
-            }
-
-            p {
-                display: inline-block;
-                margin: 0 0 0 15px !important;
-            }
-
-            .list {
-                background-color: #E7F3FF;
-            }
-
-            .list-group {
-                list-style: none;
-            }
-
-            #task-container {
-                overflow-y: scroll;
-                height: 50vh;
-            }
-
-            #no-lists {
-                pointer-events: none;
-                position: absolute;
-                top: 0;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                text-align: center;
-                width: 100%;
-                height: 100%;
-            }
-
-            .list-name {
-                margin: 0;
-                display: inline-block;
-            }
-
-            .task-list-container {
-                padding: 9pt 15pt;
-            }
-
-            #list-clone {
-                display: none !important;
-            }
-
-            #task-clone {
-                display: none !important;
-            }
-        </style>
+        <!-- External stylesheets -->
+    <link rel="stylesheet" type="text/css" href="style/navbar-style.css" />
+    <link rel="stylesheet" type="text/css" href="style/list-style.css" />
     </head>
 
     <body>
@@ -109,13 +50,13 @@
         <!-- Where the lists will be stored. -->
         <ul id="list-container" class="list-group">
             <!--Add list items after #create-list-container -->
-            <li id="create-list-container" class="list list-group-item border-0">
+            <li id="create-list-container" class="list list-group-item border-0 d-flex align-items-center">
                 <!-- Button to create list -->
                 <button type="button" id="create-list" class="btn btn-primary" data-toggle="modal"
                     data-target="#example-modal">
                     <img src="images/add.png">
                 </button>
-                <span class="font-weight-bold">Create new list</span>
+                <p class="font-weight-bold">Create new list</p>
             </li>
         </ul>
 

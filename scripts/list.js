@@ -77,7 +77,7 @@ $(document).ready(function(){
          * Iterate through each child (task item) in the task container.
          */
         $(taskContainer).children().each(function(i, child) {
-            let taskName = $(child).find("span").html()
+            let taskName = $(child).find("p").html()
             tasks.push(taskName);
         });
         console.log(currentListName);
