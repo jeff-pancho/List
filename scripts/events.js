@@ -104,10 +104,12 @@ $(document).ready(function () {
             createNewEvent(eventName, eventDate, eventPriority, eventDescription);
     
             // Reset values of input forms
-            $(eventName).val("");
-            $(date_input).datepicker('update', '');
-            $(eventPriority).val("");
-            $(eventDescription).val("");
+            // $(eventName).val("");
+            // $(date_input).datepicker('update', '');
+            // $(eventPriority).val("");
+            // $(eventDescription).val("");
+            $(eventForm)[0].reset();
+            $(eventForm)[0].classList.remove('was-validated');
         }
 
     });
