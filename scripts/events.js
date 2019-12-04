@@ -25,6 +25,9 @@ $(document).ready(function () {
     // number of events currently loaded
     let eventsCount = 0;
 
+    // Array of event references
+    let eventRefs = [];
+
     // Placeholder event
     const eventItem = $("#placeholder");
 
@@ -49,16 +52,18 @@ $(document).ready(function () {
         let events = db.collection("users").doc(user.uid).collection("events");
 
         //capture a snapshot of the events collection
-        events.get().then(function (doc) {
-            if (doc.size > 0) {
+        events.get().then(function (docs) {
+            if (docs.size > 0) {
                 hideNoEventsMessage();
                 //execute a function for each child of the event collectin
-                doc.forEach(function (child) {
+                docs.forEach(function (child) {
                     let name = child.data().name;
                     let date = child.data().date;
                     let priority = child.data().priority;
                     let description = child.data().description;
-    
+
+                    eventRefs.push(child);
+
                     //append before #create-event-container
                     createNewEvent(name, date, priority, description);
                 });
@@ -112,6 +117,8 @@ $(document).ready(function () {
         $(clone).find("#item-priority").html("<b>Priority: </b>" + priority);
         $(clone).find("#item-description").html("<b>Description: </b>" + description);
         $(clone).find(".down").hide();
+        $(clone).removeAttr("id");
+        $(clone).attr("id", "event-item-" + eventsCount);
 
         // set unique id for the collapsible
         $(clone).find(".collapse").attr("id", "collapse-" + eventsCount);
@@ -129,6 +136,21 @@ $(document).ready(function () {
                 $(this).find(".down").hide();
             }
         });
+        // delete event item
+        $(clone).find(".delete-event").click(function () {
+            var thisEvent = $(this).closest('li');
+            var id = thisEvent.attr("id");
+            var parseID = id.match(/(\d+)/);
+            var index = parseID[0];
+            console.log(eventRefs[index]);
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("events")
+                .doc(eventRefs[index].id).delete().then(function() {
+                    thisEvent.remove();
+                })
+            })
+        });
+
         $(clone).insertBefore(createEvent);
 
         eventsCount++;
