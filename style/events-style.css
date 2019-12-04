@@ -29,6 +29,8 @@ p {
 .event-group-item {
     background-color: #E7F3FF;
     padding: 9pt 15pt;
+    /* display: flex !important;
+    align-items: center; */
 }
 
 .list-group {

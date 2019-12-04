@@ -112,7 +112,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" id="save-changes" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                        <button type="submit" id="save-changes" class="btn btn-primary" data-dismiss="modal">Save
+                            changes</button>
                     </div>
                 </form>
             </div>
@@ -121,6 +122,17 @@
 
     <!-- Placeholder event item -->
     <li id="placeholder" class="event-group-item">
+        <div id="btn-dropdown" class="ml-auto">
+            <button class="btn float-right drop-down-menu" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <img src="images/three-dots.png">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <a class="dropdown-item" href="#!">Modify List</a>
+                <a class="dropdown-item" href="#!">Archive List</a>
+                <a class="dropdown-item" href="#!">Delete List</a>
+            </div>
+        </div>
         <div class="d-flex align-items-center">
             <button class="btn float-left drop-down-btn" data-toggle="collapse" href="#test">
                 <img class="up" src="images/drop-down-up.png">
@@ -147,6 +159,7 @@
     <div id="no-events">
         <h4>No events yet.<br>Try creating one!</h4>
     </div>
+
     <script src="scripts/createUser.js"></script>
     <script>
         createUser();

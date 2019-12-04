@@ -116,9 +116,9 @@ $(document).ready(function () {
         // set unique id for the collapsible
         $(clone).find(".collapse").attr("id", "collapse-" + eventsCount);
         // set target of the button to the unique collapsible id
-        $(clone).find(".btn").attr("href", "#collapse-" + eventsCount);
+        $(clone).find(".drop-down-btn").attr("href", "#collapse-" + eventsCount);
         // bind click event to button
-        $(clone).find(".btn").click(function () {
+        $(clone).find(".drop-down-btn").click(function () {
             // toggle between the up and down image of the dropdown button
             console.log("test")
             if ($(this).find(".up").is(":visible")) {
@@ -140,21 +140,5 @@ $(document).ready(function () {
             noEvents.hide();
         }
     }
-
-    // $(createEventModal).on('show.bs.modal', function() {
-    //     console.log("why3");
-    //     // Form validation
-    //     console.log(eventForm);
-    //     $(eventForm).on('submit', function(event) {
-    //         console.log("why2");
-    //         if (eventForm.checkValidity() === false) {
-    //             console.log("why");
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //         eventForm.classList.add('was-validated');
-    //     }, false);
-    // });
-
 
 });
