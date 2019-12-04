@@ -95,7 +95,10 @@ $(document).ready(function () {
                     "date": eventDate,
                     "priority": eventPriority,
                     "description": eventDescription
-                });
+                })
+                .then(function(child) {
+                    eventRefs.push(child);
+                })
             });
     
             createNewEvent(eventName, eventDate, eventPriority, eventDescription);
