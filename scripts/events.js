@@ -7,8 +7,10 @@ $(document).ready(function () {
     const createEventButton = $("#create-event-open");
     // pointer to "No Events" messgae
     const noEvents = $("#no-events");
-    // pointer to "Save Changes" button in modal form
-    const saveChanges = $("#save-changes");
+    // pointer to create event modal
+    const createEventModal = $("#example-modal");
+    // pointer to the create event form
+    const eventForm = $("#event-form");
     // pointer to the "Event name" form in the modal thing
     const eventNameForm = $("#event-name");
     // pointer to the "Event date" form in the modal thing
@@ -17,6 +19,8 @@ $(document).ready(function () {
     const selectPriority = $("#select-priority");
     // pointer to the "Event description" form in the modal thingabadingaling
     const eventDescriptionForm = $("#event-description")
+    // pointer to "Save Changes" button in modal form
+    const saveChanges = $("#save-changes");
 
     // number of events currently loaded
     let eventsCount = 0;
@@ -63,30 +67,41 @@ $(document).ready(function () {
     });
 
     // When clicking the "Save Changes" button on the modal.
-    $(saveChanges).click(function () {
-        //save the values of the inputs
-        let eventName = $(eventNameForm).val();
-        let eventDate = $(eventDateForm).val();
-        let eventPriority = $(selectPriority).val();
-        let eventDescription = $(eventDescriptionForm).val();
-
-        //save the information into the database
-        firebase.auth().onAuthStateChanged(function (user) {
-            db.collection("users").doc(user.uid).collection("events").add({
-                "name": eventName,
-                "date": eventDate,
-                "priority": eventPriority,
-                "description": eventDescription
+    $(saveChanges).click(function (e) {
+        // validate form to ensure that there is an
+        // event name and event date
+        if (!$(eventNameForm).val() || !$(eventDateForm).val()) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Add the Bootstrap was-validated class to generate validation feedback
+            $(eventForm)[0].classList.add('was-validated');
+        } else {
+            //save the values of the inputs
+            let eventName = $(eventNameForm).val();
+            let eventDate = $(eventDateForm).val();
+            let eventPriority = $(selectPriority).val();
+            let eventDescription = $(eventDescriptionForm).val();
+    
+    
+            //save the information into the database
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("events").add({
+                    "name": eventName,
+                    "date": eventDate,
+                    "priority": eventPriority,
+                    "description": eventDescription
+                });
             });
-        });
+    
+            createNewEvent(eventName, eventDate, eventPriority, eventDescription);
+    
+            // Reset values of input forms
+            $(eventName).val("");
+            $(date_input).datepicker('update', '');
+            $(eventPriority).val("");
+            $(eventDescription).val("");
+        }
 
-        createNewEvent(eventName, eventDate, eventPriority, eventDescription);
-
-        // Reset values of input forms
-        $(eventName).val("");
-        $(date_input).datepicker('update', '');
-        $(eventPriority).val("");
-        $(eventDescription).val("");
     });
 
     // Adds a new event to the list
@@ -125,6 +140,21 @@ $(document).ready(function () {
             noEvents.hide();
         }
     }
+
+    // $(createEventModal).on('show.bs.modal', function() {
+    //     console.log("why3");
+    //     // Form validation
+    //     console.log(eventForm);
+    //     $(eventForm).on('submit', function(event) {
+    //         console.log("why2");
+    //         if (eventForm.checkValidity() === false) {
+    //             console.log("why");
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //         eventForm.classList.add('was-validated');
+    //     }, false);
+    // });
 
 
 });
