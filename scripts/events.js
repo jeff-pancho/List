@@ -7,8 +7,10 @@ $(document).ready(function () {
     const createEventButton = $("#create-event-open");
     // pointer to "No Events" messgae
     const noEvents = $("#no-events");
-    // pointer to "Save Changes" button in modal form
-    const saveChanges = $("#save-changes");
+    // pointer to create event modal
+    const createEventModal = $("#example-modal");
+    // pointer to the create event form
+    const eventForm = $("#event-form");
     // pointer to the "Event name" form in the modal thing
     const eventNameForm = $("#event-name");
     // pointer to the "Event date" form in the modal thing
@@ -17,9 +19,14 @@ $(document).ready(function () {
     const selectPriority = $("#select-priority");
     // pointer to the "Event description" form in the modal thingabadingaling
     const eventDescriptionForm = $("#event-description")
+    // pointer to "Save Changes" button in modal form
+    const saveChanges = $("#save-changes");
 
     // number of events currently loaded
     let eventsCount = 0;
+
+    // Array of event references
+    let eventRefs = [];
 
     // Placeholder event
     const eventItem = $("#placeholder");
@@ -45,16 +52,18 @@ $(document).ready(function () {
         let events = db.collection("users").doc(user.uid).collection("events");
 
         //capture a snapshot of the events collection
-        events.get().then(function (doc) {
-            if (doc.size > 0) {
+        events.get().then(function (docs) {
+            if (docs.size > 0) {
                 hideNoEventsMessage();
                 //execute a function for each child of the event collectin
-                doc.forEach(function (child) {
+                docs.forEach(function (child) {
                     let name = child.data().name;
                     let date = child.data().date;
                     let priority = child.data().priority;
                     let description = child.data().description;
-    
+
+                    eventRefs.push(child);
+
                     //append before #create-event-container
                     createNewEvent(name, date, priority, description);
                 });
@@ -63,30 +72,46 @@ $(document).ready(function () {
     });
 
     // When clicking the "Save Changes" button on the modal.
-    $(saveChanges).click(function () {
-        //save the values of the inputs
-        let eventName = $(eventNameForm).val();
-        let eventDate = $(eventDateForm).val();
-        let eventPriority = $(selectPriority).val();
-        let eventDescription = $(eventDescriptionForm).val();
-
-        //save the information into the database
-        firebase.auth().onAuthStateChanged(function (user) {
-            db.collection("users").doc(user.uid).collection("events").add({
-                "name": eventName,
-                "date": eventDate,
-                "priority": eventPriority,
-                "description": eventDescription
+    $(saveChanges).click(function (e) {
+        // validate form to ensure that there is an
+        // event name and event date
+        if (!$(eventNameForm).val() || !$(eventDateForm).val()) {
+            e.preventDefault();
+            e.stopPropagation();
+            // Add the Bootstrap was-validated class to generate validation feedback
+            $(eventForm)[0].classList.add('was-validated');
+        } else {
+            //save the values of the inputs
+            let eventName = $(eventNameForm).val();
+            let eventDate = $(eventDateForm).val();
+            let eventPriority = $(selectPriority).val();
+            let eventDescription = $(eventDescriptionForm).val();
+    
+    
+            //save the information into the database
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("events").add({
+                    "name": eventName,
+                    "date": eventDate,
+                    "priority": eventPriority,
+                    "description": eventDescription
+                })
+                .then(function(child) {
+                    eventRefs.push(child);
+                })
             });
-        });
+    
+            createNewEvent(eventName, eventDate, eventPriority, eventDescription);
+    
+            // Reset values of input forms
+            // $(eventName).val("");
+            // $(date_input).datepicker('update', '');
+            // $(eventPriority).val("");
+            // $(eventDescription).val("");
+            $(eventForm)[0].reset();
+            $(eventForm)[0].classList.remove('was-validated');
+        }
 
-        createNewEvent(eventName, eventDate, eventPriority, eventDescription);
-
-        // Reset values of input forms
-        $(eventName).val("");
-        $(date_input).datepicker('update', '');
-        $(eventPriority).val("");
-        $(eventDescription).val("");
     });
 
     // Adds a new event to the list
@@ -97,13 +122,15 @@ $(document).ready(function () {
         $(clone).find("#item-priority").html("<b>Priority: </b>" + priority);
         $(clone).find("#item-description").html("<b>Description: </b>" + description);
         $(clone).find(".down").hide();
+        $(clone).removeAttr("id");
+        $(clone).attr("id", "event-item-" + eventsCount);
 
         // set unique id for the collapsible
         $(clone).find(".collapse").attr("id", "collapse-" + eventsCount);
         // set target of the button to the unique collapsible id
-        $(clone).find(".btn").attr("href", "#collapse-" + eventsCount);
+        $(clone).find(".drop-down-btn").attr("href", "#collapse-" + eventsCount);
         // bind click event to button
-        $(clone).find(".btn").click(function () {
+        $(clone).find(".drop-down-btn").click(function () {
             // toggle between the up and down image of the dropdown button
             console.log("test")
             if ($(this).find(".up").is(":visible")) {
@@ -114,6 +141,21 @@ $(document).ready(function () {
                 $(this).find(".down").hide();
             }
         });
+        // delete event item
+        $(clone).find(".delete-event").click(function () {
+            var thisEvent = $(this).closest('li');
+            var id = thisEvent.attr("id");
+            var parseID = id.match(/(\d+)/);
+            var index = parseID[0];
+            console.log(eventRefs[index]);
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("events")
+                .doc(eventRefs[index].id).delete().then(function() {
+                    thisEvent.remove();
+                })
+            })
+        });
+
         $(clone).insertBefore(createEvent);
 
         eventsCount++;
@@ -125,6 +167,5 @@ $(document).ready(function () {
             noEvents.hide();
         }
     }
-
 
 });

@@ -78,20 +78,24 @@
                         <span aria-hidden="true">&times;</span>
                     </button> -->
                 </div>
-                <form>
+                <form id="event-form" class="needs-validation" novalidate>
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Event name</label>
                             <input type="text" id="event-name" class="form-control" placeholder="Enter event name..."
                                 required>
+                            <div class="invalid-feedback">
+                                Please choose an event name.
+                            </div>
                         </div>
-                        <!-- <iframe
-                            src="https://calendar.google.com/calendar/embed?height=300&amp;wkst=1&amp;bgcolor=%234b9de9&amp;ctz=America%2FVancouver&amp;src=ZW4uY2FuYWRpYW4jaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%231F753C&amp;showTitle=1&amp;showNav=1&amp;showCalendars=0&amp;showTabs=0&amp;showPrint=0&amp;showDate=1&amp;showTz=1&amp;title=Chose%20Event%20Date"
-                            style="border-width:0" width="450" height="300" frameborder="0" scrolling="no"></iframe> -->
                         <div class="form-group">
                             <!-- Date input -->
                             <label class="control-label" for="date">Date</label>
-                            <input class="form-control" id="event-date" name="date" placeholder="MM/DD/YYY" type="text" />
+                            <input class="form-control" id="event-date" name="date" placeholder="MM/DD/YYY" type="text"
+                                required />
+                            <div class="invalid-feedback">
+                                Please choose an event date.
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>Select priority</label>
@@ -108,7 +112,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button id="save-changes" type="submit" class="btn btn-primary" data-dismiss="modal">Save
+                        <button type="submit" id="save-changes" class="btn btn-primary" data-dismiss="modal">Save
                             changes</button>
                     </div>
                 </form>
@@ -118,6 +122,17 @@
 
     <!-- Placeholder event item -->
     <li id="placeholder" class="event-group-item">
+        <div id="btn-dropdown" class="ml-auto">
+            <button class="btn float-right drop-down-menu" type="button" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <img src="images/three-dots.png">
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <a class="dropdown-item" href="#!">Modify Event</a>
+                <a class="dropdown-item" href="#!">Archive Event</a>
+                <a class="dropdown-item delete-event" href="#!">Delete Event</a>
+            </div>
+        </div>
         <div class="d-flex align-items-center">
             <button class="btn float-left drop-down-btn" data-toggle="collapse" href="#test">
                 <img class="up" src="images/drop-down-up.png">
@@ -144,6 +159,7 @@
     <div id="no-events">
         <h4>No events yet.<br>Try creating one!</h4>
     </div>
+
     <script src="scripts/createUser.js"></script>
     <script>
         createUser();
