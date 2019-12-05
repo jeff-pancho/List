@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function () {
     // pointer to the list container
     const listContainer = $("#list-container");
     // pointer to the container that holds the create list button
@@ -23,25 +23,29 @@ $(document).ready(function(){
     const cancelCreateTasks = $("#cancel-create-tasks");
     // pointer to the trash can button
     const trashCanBtn = $("#trash-can-btn");
-    
+
     // number of lists currently loaded
     let listsCount = 0;
     // current list name after inputting it into the modal form
     let currentListName = "";
-    
+    // Array of list references
+    let listRefs = [];
+
     //if user is authenticated
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
         //pointer to the user's list collection
         let lists = db.collection("users").doc(user.uid).collection("lists");
 
         //capture a snapshot of the lists collection
-        lists.get().then(function(doc){
+        lists.get().then(function (doc) {
             if (doc.size > 0) {
                 hideNoLists();
                 //execute a function for each child of the lists collectin
-                doc.forEach(function(child){
+                doc.forEach(function (child) {
                     let name = child.data().name;
                     let taskArray = child.data().tasks;
+
+                    listRefs.push(child);
 
                     // create list
                     createNewList(name, taskArray);
@@ -51,14 +55,14 @@ $(document).ready(function(){
         console.log(listsCount);
     });
 
-    $(listSaveChanges).click(function() {
+    $(listSaveChanges).click(function () {
         // save the value of the input
         currentListName = $(listNameForm).val();
         // reset the value of input
         $(listNameForm).val("");
     });
 
-    $("#create-task-modal-form").click(function(e) {
+    $("#create-task-modal-form").click(function (e) {
         e.preventDefault();
         // if the "Task name" form is filled out
         if ($(taskNameForm).val()) {
@@ -70,13 +74,13 @@ $(document).ready(function(){
     });
 
     // Save the new list and tasks
-    $(taskSaveChanges).click(function() {
+    $(taskSaveChanges).click(function () {
         // Variable to save the names of each task.
         let tasks = [];
         /**
          * Iterate through each child (task item) in the task container.
          */
-        $(taskContainer).children().each(function(i, child) {
+        $(taskContainer).children().each(function (i, child) {
             let taskName = $(child).find("p").html()
             tasks.push(taskName);
         });
@@ -85,7 +89,7 @@ $(document).ready(function(){
         console.log(tasks);
         emptyTasks();
     });
-    
+
 
     $(cancelCreateTasks).click(emptyTasks);
 
@@ -100,7 +104,7 @@ $(document).ready(function(){
         $(taskItem).addClass("list");
         $(taskItem).find("p").html(taskName);
         // trash can button to delete itself
-        $(taskItem).find("button").click(function() {
+        $(taskItem).find("button").click(function () {
             $(this).parent().remove();
         });
 
@@ -116,17 +120,20 @@ $(document).ready(function(){
      */
     function addList(listName, taskArray) {
         hideNoLists();
-        
+
         //append before #create-list-container
         createNewList(listName, taskArray);
 
         // add new list to database
-        firebase.auth().onAuthStateChanged(function(user) {
+        firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists").add({
                 "name": listName,
                 "tasks": taskArray,
                 "status": "active"
-            });
+            })
+                .then(function (child) {
+                    listRefs.push(child);
+                })
         });
     }
 
@@ -140,6 +147,7 @@ $(document).ready(function(){
         $(clone).removeAttr("id");
         $(clone).find(".down").hide();
         $(clone).find(".list-name").html(listName);
+        $(clone).attr("id", "list-item-" + listsCount);
 
         // set unique id for the collapsible
         $(clone).find(".collapse").attr("id", "collapse-" + listsCount);
@@ -149,6 +157,26 @@ $(document).ready(function(){
         $(clone).find(".drop-down-btn").click(toggleArrow);
 
         generateTasks(clone, taskArray)
+
+        // delete list item
+        $(clone).find(".delete-list").click(function () {
+            var thisList = $(this).closest('li');
+            var thisListID = thisList.attr("id");
+            var parseID = thisListID.match(/(\d+)/);
+            var index = parseID[0];
+            console.log(listRefs[index]);
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("lists")
+                    .doc(listRefs[index].id).delete().then(function () {
+                        thisList.remove();
+                        listRefs.splice(index, 1, null);
+                        var afterDelete = listRefs.filter(doc => doc != null)
+                        if (afterDelete.length == 0) {
+                            showNoListsMessage();
+                        }
+                    })
+            })
+        });
 
         $(clone).insertBefore(createList);
         listsCount++;
@@ -161,7 +189,7 @@ $(document).ready(function(){
      */
     function generateTasks(clone, taskArray) {
         let taskListContainer = $(clone).find(".task-list-container");
-        taskArray.forEach(function(task) {
+        taskArray.forEach(function (task) {
             let taskClone = $("#task-clone").clone().show();
             $(taskClone).removeAttr("id");
             $(taskClone).find(".trash-list").remove();
@@ -175,8 +203,17 @@ $(document).ready(function(){
      */
     function hideNoLists() {
         //hide #no-lists if it's still visible
-        if($(noLists).is(":visible")) {
+        if ($(noLists).is(":visible")) {
             $(noLists).hide();
+        }
+    }
+
+    /**
+     * Shows the notifier that says you have no lists.
+     */
+    function showNoListsMessage() {
+        if (noLists.is(":hidden")) {
+            noLists.show();
         }
     }
 
