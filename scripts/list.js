@@ -13,8 +13,8 @@ $(document).ready(function () {
     const listForm = $("#list-form");
     // pointer to the "List name" form
     const listNameForm = $("#list-name");
-    // pointer to the create task button inside the modal form
-    const createTaskButton = $("#create-task");
+    // pointer to the create task form
+    const createTaskForm = $("#create-task-modal-form");
     // pointer to the task field in the modal form
     const taskContainer = $("#task-container");
     // pointer to the "Task name" form
@@ -54,6 +54,7 @@ $(document).ready(function () {
                 });
             }
         });
+        console.log(listRefs);
         console.log(listsCount);
     });
 
@@ -69,43 +70,48 @@ $(document).ready(function () {
             currentListName = $(listNameForm).val();
             // reset the value of input
             $(listNameForm).val("");
+
+            // Unbinds any previous event handlers of the save changes button
+            // then adds a new click handler to save the new list and tasks.
+            $(taskSaveChanges).unbind().click(function () {
+                // Variable to save the names of each task.
+                let tasks = [];
+                /**
+                 * Iterate through each child (task item) in the task container.
+                 */
+                $(taskContainer).children().each(function (i, child) {
+                    let taskName = $(child).find("p").html()
+                    tasks.push(taskName);
+                });
+                console.log(currentListName);
+                addList(currentListName, tasks);
+                console.log(tasks);
+                emptyTasks();
+            });
+
+            // Unbinds any previous event handlers of the create task form
+            // then adds a new click handler to create a new task inside the
+            // modal form.
+            $(createTaskForm).unbind().submit(function (e) {
+                e.preventDefault();
+                // if the "Task name" form is filled out
+                if ($(taskNameForm).val()) {
+                    let taskName = $(taskNameForm).val();
+                    // reset the form
+                    $(taskNameForm).val("");
+                    addTaskToForm(taskName);
+                }
+            });
         }
     });
 
-    $("#create-task-modal-form").click(function (e) {
-        e.preventDefault();
-        // if the "Task name" form is filled out
-        if ($(taskNameForm).val()) {
-            let taskName = $(taskNameForm).val();
-            // reset the form
-            $(taskNameForm).val("");
-            addTaskToForm(taskName);
-        }
-    });
-
-    // Save the new list and tasks
-    $(taskSaveChanges).click(function () {
-        // Variable to save the names of each task.
-        let tasks = [];
-        /**
-         * Iterate through each child (task item) in the task container.
-         */
-        $(taskContainer).children().each(function (i, child) {
-            let taskName = $(child).find("p").html()
-            tasks.push(taskName);
-        });
-        console.log(currentListName);
-        addList(currentListName, tasks);
-        console.log(tasks);
-        emptyTasks();
-    });
-
-
+    // Clicking cancel while creating tasks.
     $(cancelCreateTasks).click(emptyTasks);
 
     /**
      * Adds a new task to the task modal form. (Phew)
      * @param {String} taskName name of the task
+     * @returns the task added to the form (for method chaining)
      */
     function addTaskToForm(taskName) {
         let taskItem = $("#task-clone").clone().show();
@@ -121,6 +127,8 @@ $(document).ready(function () {
         $(taskContainer).append(taskItem);
         // scroll the div down to the bottom after creating task
         $(taskContainer).scrollTop(1000000);
+
+        return taskItem;
     }
 
     /**
@@ -131,9 +139,6 @@ $(document).ready(function () {
     function addList(listName, taskArray) {
         hideNoLists();
 
-        //append before #create-list-container
-        createNewList(listName, taskArray);
-
         // add new list to database
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists").add({
@@ -143,6 +148,8 @@ $(document).ready(function () {
             })
                 .then(function (child) {
                     listRefs.push(child);
+                    //append before #create-list-container
+                    createNewList(listName, taskArray);
                 })
         });
     }
@@ -168,28 +175,116 @@ $(document).ready(function () {
 
         generateTasks(clone, taskArray)
 
+        // modify list button per list
+        $(clone).find(".modify-list").click(modifyListSetup);
         // delete list item
-        $(clone).find(".delete-list").click(function () {
-            var thisList = $(this).closest('li');
-            var thisListID = thisList.attr("id");
-            var parseID = thisListID.match(/(\d+)/);
-            var index = parseID[0];
-            console.log(listRefs[index]);
-            firebase.auth().onAuthStateChanged(function (user) {
-                db.collection("users").doc(user.uid).collection("lists")
-                    .doc(listRefs[index].id).delete().then(function () {
-                        thisList.remove();
-                        listRefs.splice(index, 1, null);
-                        var afterDelete = listRefs.filter(doc => doc != null)
-                        if (afterDelete.length == 0) {
-                            showNoListsMessage();
-                        }
-                    })
-            })
-        });
+        $(clone).find(".delete-list").click(deleteList);
 
         $(clone).insertBefore(createList);
         listsCount++;
+    }
+
+    /**
+     * Deletes the list item and updates the results to the database.
+     */
+    function deleteList() {
+        let thisList = $(this).closest('li');
+        let thisListID = thisList.attr("id");
+        let parseID = thisListID.match(/(\d+)/);
+        let index = parseID[0];
+        console.log(listRefs[index]);
+        firebase.auth().onAuthStateChanged(function (user) {
+            db.collection("users").doc(user.uid).collection("lists")
+                .doc(listRefs[index].id).delete().then(function () {
+                    thisList.remove();
+                    listRefs.splice(index, 1, null);
+                    let afterDelete = listRefs.filter(doc => doc != null)
+                    if (afterDelete.length == 0) {
+                        showNoListsMessage();
+                    }
+                })
+        })
+    }
+
+    /**
+     * Brings up the task modal and allows the user to modify the list.
+     */
+    function modifyListSetup() {
+        let thisList = $(this).closest('li');
+        let thisListID = thisList.attr("id");
+        let parseID = thisListID.match(/(\d+)/);
+        let index = parseID[0];
+
+        // puts all the tasks taken from the database into the variable
+        firebase.auth().onAuthStateChanged(function (user) {
+            db.collection("users").doc(user.uid).collection("lists")
+                .doc(listRefs[index].id).get().then(function (doc, i) {
+                    modifyTasks(doc, index);
+                });
+        });
+    }
+
+    /**
+     * Allows the user to start modifying the tasks of a certain list.
+     * @param {*} doc the list document in the database
+     * @param {number} index in listRefs
+     */
+    function modifyTasks(doc, index) {
+        console.log(doc);
+        let tasksArray = doc.data().tasks;
+        generateTasksInsideModal(tasksArray);
+
+        // Unbind any event handlers on the save changes button in the task modal.
+        // Also adds a new click handler that will save the changes made to the tasks
+        // in the list.
+        $(taskSaveChanges).unbind().click(function () {
+            // update the tasks array inside the database
+            firebase.auth().onAuthStateChanged(function (user) {
+                db.collection("users").doc(user.uid).collection("lists")
+                    .doc(doc.id).update({
+                        "tasks": tasksArray
+                    }).then(function () {
+                        let listItem = $("#list-item-" + index);
+                        console.log(listItem);
+                        $(listItem).find(".task-list-container").empty();
+                        generateTasks(listItem, tasksArray);
+                        emptyTasks();
+                    });
+            });
+        });
+
+        $(createTaskForm).unbind().submit(function (e) {
+            e.preventDefault();
+            // if the "Task name" form is filled out
+            if ($(taskNameForm).val()) {
+                let taskName = $(taskNameForm).val();
+                addTaskToForm(taskName);
+                // reset the form
+                $(taskNameForm).val("");
+                tasksArray.push(taskName);
+            }
+        });
+    }
+
+    /**
+     * Generates the tasks inside the tasks modal using the inputted array of tasks.
+     * It will also unbind and add a new click handler to the trashcan to modify the
+     * task array.
+     * @param {Array} tasksArray array of tasks
+     */
+    function generateTasksInsideModal(tasksArray) {
+        tasksArray.forEach(function (taskName) {
+            // Add the task to the form then unbind the click handler on the
+            // trash button. This will allow us to bind a new click handler
+            // to the trash button to modify the array.
+            addTaskToForm(taskName).find(".trash-list").unbind().click(function () {
+                // remove this task from the array
+                let index = $(this).parent().index();
+                tasksArray.splice(index, 1);
+                console.log(tasksArray);
+                $(this).parent().remove();
+            });
+        });
     }
 
     /**
