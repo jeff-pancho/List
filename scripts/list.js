@@ -80,7 +80,7 @@ $(document).ready(function () {
                  * Iterate through each child (task item) in the task container.
                  */
                 $(taskContainer).children().each(function (i, child) {
-                    let taskName = $(child).find("p").html()
+                    let taskName = $(child).find("p").text();
                     tasks.push(taskName);
                 });
                 console.log(currentListName);
@@ -118,7 +118,7 @@ $(document).ready(function () {
         $(taskItem).removeAttr("id");
         $(taskItem).find(".check-mark").remove();
         $(taskItem).addClass("list");
-        $(taskItem).find("p").html(taskName);
+        $(taskItem).find("p").text(taskName);
         // trash can button to delete itself
         $(taskItem).find("button").click(function () {
             $(this).parent().remove();
@@ -163,7 +163,7 @@ $(document).ready(function () {
         let clone = $("#list-clone").clone().show();
         $(clone).removeAttr("id");
         $(clone).find(".down").hide();
-        $(clone).find(".list-name").html(listName);
+        $(clone).find(".list-name").text(listName);
         $(clone).attr("id", "list-item-" + listsCount);
 
         // set unique id for the collapsible
@@ -303,7 +303,7 @@ $(document).ready(function () {
             let taskClone = $("#task-clone").clone().show();
             $(taskClone).removeAttr("id");
             $(taskClone).find(".trash-list").remove();
-            $(taskClone).find("p").html(task);
+            $(taskClone).find("p").text(task);
             $(taskListContainer).append(taskClone);
         });
     }

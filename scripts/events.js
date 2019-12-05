@@ -118,10 +118,12 @@ $(document).ready(function () {
      */
     function createNewEvent(name, date, priority, description) {
         let clone = eventItem.clone().show()
-        $(clone).find("#item-name").html(name);
-        $(clone).find("#item-date").html(date);
+        $(clone).find("#item-name").text(name);
+        $(clone).find("#item-date").text(date);
         $(clone).find("#item-priority").html("<b>Priority: </b>" + priority);
-        $(clone).find("#item-description").html("<b>Description: </b>" + description);
+        let cloneDesc = document.createTextNode(description);
+        $(clone).find("#item-description").html("<b>Description: </b>");
+        $(clone).find("#item-description").append(cloneDesc);
         $(clone).find(".down").hide();
         $(clone).removeAttr("id");
         $(clone).attr("id", "event-item-" + eventsCount);
@@ -212,10 +214,13 @@ $(document).ready(function () {
                     .then(function () {
                         // update the event afterwards
                         let updatedEvent = $("#event-item-" + index);
-                        $(updatedEvent).find("#item-name").html(eventName);
-                        $(updatedEvent).find("#item-date").html(eventDate);
+                        $(updatedEvent).find("#item-name").text(eventName);
+                        $(updatedEvent).find("#item-date").text(eventDate);
                         $(updatedEvent).find("#item-priority").html("<b>Priority: </b>" + eventPriority);
-                        $(updatedEvent).find("#item-description").html("<b>Description: </b>" + eventDescription);
+                        let updatedDesc = document.createTextNode(eventDescription);
+                        $(updatedEvent).find("#item-description").html("<b>Description: </b>");
+                        $(updatedEvent).find("#item-description").append(updatedDesc);
+                        
                         console.log(updatedEvent);
                     })
                 });
