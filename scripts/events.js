@@ -54,8 +54,14 @@ $(document).ready(function () {
         });
     });
 
+    // reset the forms everytime the user closes the modal
+    $("#cancel-button").click(function () {
+        $(eventForm)[0].reset();
+    });
+
     // Creating new event
     $(createEventButton).click(function () {
+        $("#example-modal-label").html("Create Event");
         // Unbinds any previous event handlers of the save changes button
         // Adds a new click handler.
         // When clicking the "Save Changes" button on the modal.
@@ -151,6 +157,7 @@ $(document).ready(function () {
      * When the event modal shows up, it will allow the user to modify the event.
      */
     function modifyEventSetup() {
+        $("#example-modal-label").html("Modify Event");
         let thisEvent = $(this).closest('li');
         let thisEventID = thisEvent.attr("id");
         let parseID = thisEventID.match(/(\d+)/);
