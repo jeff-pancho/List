@@ -26,6 +26,7 @@ button img {
 
 p {
     display: inline-block;
+    overflow: auto;
     margin: 0 0 0 15px;
 }
 
