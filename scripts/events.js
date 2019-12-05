@@ -24,23 +24,21 @@ $(document).ready(function () {
 
     // number of events currently loaded
     let eventsCount = 0;
-
     // Array of event references
     let eventRefs = [];
-
     // Placeholder event
     const eventItem = $("#placeholder");
 
-    //if user is authenticated
+    // if user is authenticated
     firebase.auth().onAuthStateChanged(function (user) {
-        //pointer to the user's events collection
+        // pointer to the user's events collection
         let events = db.collection("users").doc(user.uid).collection("events");
 
-        //capture a snapshot of the events collection
+        // capture a snapshot of the events collection
         events.get().then(function (docs) {
             if (docs.size > 0) {
                 hideNoEventsMessage();
-                //execute a function for each child of the event collectin
+                // execute a function for each child of the event collection
                 docs.forEach(function (child) {
                     let name = child.data().name;
                     let date = child.data().date;
@@ -49,57 +47,58 @@ $(document).ready(function () {
 
                     eventRefs.push(child);
 
-                    //append before #create-event-container
+                    // append before #create-event-container
                     createNewEvent(name, date, priority, description);
                 });
             }
         });
     });
 
-    // When clicking the "Save Changes" button on the modal.
-    $(saveChanges).click(function (e) {
-        // validate form to ensure that there is an
-        // event name and event date
-        if (!$(eventNameForm).val() || !$(eventDateForm).val()) {
-            e.preventDefault();
-            e.stopPropagation();
-            // Add the Bootstrap was-validated class to generate validation feedback
-            $(eventForm)[0].classList.add('was-validated');
-        } else {
-            //save the values of the inputs
-            let eventName = $(eventNameForm).val();
-            let eventDate = $(eventDateForm).val();
-            let eventPriority = $(selectPriority).val();
-            let eventDescription = $(eventDescriptionForm).val();
+    // Creating new event
+    $(createEventButton).click(function () {
+        // Unbinds any previous event handlers of the save changes button
+        // Adds a new click handler.
+        // When clicking the "Save Changes" button on the modal.
+        $(saveChanges).unbind().click(function (e) {
+            // validate form to ensure that there is an
+            // event name and event date
+            if (!$(eventNameForm).val() || !$(eventDateForm).val()) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Add the Bootstrap was-validated class to generate validation feedback
+                $(eventForm)[0].classList.add('was-validated');
+            } else {
+                //save the values of the inputs
+                let eventName = $(eventNameForm).val();
+                let eventDate = $(eventDateForm).val();
+                let eventPriority = $(selectPriority).val();
+                let eventDescription = $(eventDescriptionForm).val();
 
+                //save the information into the database
+                firebase.auth().onAuthStateChanged(function (user) {
+                    db.collection("users").doc(user.uid).collection("events").add({
+                        "name": eventName,
+                        "date": eventDate,
+                        "priority": eventPriority,
+                        "description": eventDescription
+                    })
+                    .then(function (child) {
+                        eventRefs.push(child);
+                    })
+                });
 
-            //save the information into the database
-            firebase.auth().onAuthStateChanged(function (user) {
-                db.collection("users").doc(user.uid).collection("events").add({
-                    "name": eventName,
-                    "date": eventDate,
-                    "priority": eventPriority,
-                    "description": eventDescription
-                })
-                .then(function (child) {
-                    eventRefs.push(child);
-                })
-            });
-
-            createNewEvent(eventName, eventDate, eventPriority, eventDescription);
-
-            // make sure no events message is hidden if making first event
-            hideNoEventsMessage();
-
-            // Reset values of input forms
-            // $(eventName).val("");
-            // $(date_input).datepicker('update', '');
-            // $(eventPriority).val("");
-            // $(eventDescription).val("");
-            $(eventForm)[0].reset();
-            $(eventForm)[0].classList.remove('was-validated');
-        }
-
+                createNewEvent(eventName, eventDate, eventPriority, eventDescription);
+                // make sure no events message is hidden if making first event
+                hideNoEventsMessage();
+                // Reset values of input forms
+                // $(eventName).val("");
+                // $(date_input).datepicker('update', '');
+                // $(eventPriority).val("");
+                // $(eventDescription).val("");
+                $(eventForm)[0].reset();
+                $(eventForm)[0].classList.remove('was-validated');
+            }
+        });
     });
 
     /**
@@ -137,30 +136,112 @@ $(document).ready(function () {
                 $(this).find(".down").hide();
             }
         });
+
+        $(clone).find(".modify-event").click(modifyEventSetup);
         
         // delete event item
-        $(clone).find(".delete-event").click(function () {
-            var thisEvent = $(this).closest('li');
-            var thisEventID = thisEvent.attr("id");
-            var parseID = thisEventID.match(/(\d+)/);
-            var index = parseID[0];
-            console.log(eventRefs[index]);
-            firebase.auth().onAuthStateChanged(function (user) {
-                db.collection("users").doc(user.uid).collection("events")
-                    .doc(eventRefs[index].id).delete().then(function () {
-                        thisEvent.remove();
-                        eventRefs.splice(index, 1, null);
-                        var afterDelete = eventRefs.filter(doc => doc != null)
-                        if (afterDelete.length == 0) {
-                            showNoEventsMessage();
-                        }
-                    })
-            })
-        });
+        $(clone).find(".delete-event").click(deleteEvent);
 
         $(clone).insertBefore(createEvent);
 
         eventsCount++;
+    }
+
+    /**
+     * When the event modal shows up, it will allow the user to modify the event.
+     */
+    function modifyEventSetup() {
+        let thisEvent = $(this).closest('li');
+        let thisEventID = thisEvent.attr("id");
+        let parseID = thisEventID.match(/(\d+)/);
+        let index = parseID[0];
+
+        firebase.auth().onAuthStateChanged(function (user) {
+            db.collection("users").doc(user.uid).collection("events")
+                .doc(eventRefs[index].id).get().then(function (doc) {
+                    modifyEvent(doc, index);
+                }); 
+        });
+    }
+
+    /**
+     * Allows the user to start modifying the events in the page.
+     * @param {*} doc the event document in the database
+     * @param {number} index in eventRefs
+     */
+    function modifyEvent(doc, index) {
+        $(eventNameForm).val(doc.data().name);
+        $(eventDateForm).val(doc.data().date);
+        $(selectPriority).val(doc.data().priority);
+        $(eventDescriptionForm).val(doc.data().description);
+
+        // Unbind any event handlers on the save changes button in the task modal.
+        // Also adds a new click handler that will save the changes made to the tasks
+        // in the list.
+        $(saveChanges).unbind().click(function (e) {
+            // validate form to ensure that there is an
+            // event name and event date
+            if (!$(eventNameForm).val() || !$(eventDateForm).val()) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Add the Bootstrap was-validated class to generate validation feedback
+                $(eventForm)[0].classList.add('was-validated');
+            } else {
+                // save the values of the inputs
+                let eventName = $(eventNameForm).val();
+                let eventDate = $(eventDateForm).val();
+                let eventPriority = $(selectPriority).val();
+                let eventDescription = $(eventDescriptionForm).val();
+
+                // save the information into the database
+                firebase.auth().onAuthStateChanged(function (user) {
+                    db.collection("users").doc(user.uid).collection("events")
+                        .doc(doc.id).update({
+                        "name": eventName,
+                        "date": eventDate,
+                        "priority": eventPriority,
+                        "description": eventDescription
+                    })
+                    .then(function () {
+                        // update the event afterwards
+                        let updatedEvent = $("#event-item-" + index);
+                        $(updatedEvent).find("#item-name").html(eventName);
+                        $(updatedEvent).find("#item-date").html(eventDate);
+                        $(updatedEvent).find("#item-priority").html("<b>Priority: </b>" + eventPriority);
+                        $(updatedEvent).find("#item-description").html("<b>Description: </b>" + eventDescription);
+                        console.log(updatedEvent);
+                    })
+                });
+
+                // make sure no events message is hidden if making first event
+                hideNoEventsMessage();
+                $(eventForm)[0].reset();
+                $(eventForm)[0].classList.remove('was-validated');
+            }
+        });
+    }
+
+    /**
+     * Deletes the event and updates the results to the database.
+     */
+    function deleteEvent() {
+        let thisEvent = $(this).closest('li');
+        let thisEventID = thisEvent.attr("id");
+        let parseID = thisEventID.match(/(\d+)/);
+        let index = parseID[0];
+        // remove the event from the database and the array
+        console.log(eventRefs[index]);
+        firebase.auth().onAuthStateChanged(function (user) {
+            db.collection("users").doc(user.uid).collection("events")
+                .doc(eventRefs[index].id).delete().then(function () {
+                    thisEvent.remove();
+                    eventRefs.splice(index, 1, null);
+                    var afterDelete = eventRefs.filter(doc => doc != null)
+                    if (afterDelete.length == 0) {
+                        showNoEventsMessage();
+                    }
+                })
+        })
     }
 
     // Hides the "No Events" message

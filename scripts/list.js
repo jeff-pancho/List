@@ -193,6 +193,7 @@ $(document).ready(function () {
         let parseID = thisListID.match(/(\d+)/);
         let index = parseID[0];
         console.log(listRefs[index]);
+        // remove the list from the database and array
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists")
                 .doc(listRefs[index].id).delete().then(function () {
@@ -207,7 +208,7 @@ $(document).ready(function () {
     }
 
     /**
-     * Brings up the task modal and allows the user to modify the list.
+     * When the tasks modal shows up, it will allow the user to modify the tasks.
      */
     function modifyListSetup() {
         let thisList = $(this).closest('li');
@@ -218,7 +219,7 @@ $(document).ready(function () {
         // puts all the tasks taken from the database into the variable
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists")
-                .doc(listRefs[index].id).get().then(function (doc, i) {
+                .doc(listRefs[index].id).get().then(function (doc) {
                     modifyTasks(doc, index);
                 });
         });
@@ -244,6 +245,7 @@ $(document).ready(function () {
                     .doc(doc.id).update({
                         "tasks": tasksArray
                     }).then(function () {
+                        // update the list afterwards
                         let listItem = $("#list-item-" + index);
                         console.log(listItem);
                         $(listItem).find(".task-list-container").empty();
@@ -253,6 +255,9 @@ $(document).ready(function () {
             });
         });
 
+        // Unbind any event handlers on the create task form in the list modal.
+        // Also adds a new submit handler that will save the changes made to the
+        // name of the list I guess.
         $(createTaskForm).unbind().submit(function (e) {
             e.preventDefault();
             // if the "Task name" form is filled out
