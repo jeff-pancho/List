@@ -102,7 +102,15 @@ $(document).ready(function () {
 
     });
 
-    // Adds a new event to the list
+    /**
+     * Create a new event.
+     * It will first clone the hidden element to append to the list that stores
+     * each event in the page.
+     * @param {String} name of the event
+     * @param {String} date of the event
+     * @param {String} priority of the event
+     * @param {String} description of the event
+     */
     function createNewEvent(name, date, priority, description) {
         let clone = eventItem.clone().show()
         $(clone).find("#item-name").html(name);

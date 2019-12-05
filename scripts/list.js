@@ -9,6 +9,8 @@ $(document).ready(function () {
     const noLists = $("#no-lists");
     // pointer to "Save Changes" button in list modal form
     const listSaveChanges = $("#list-save-changes");
+    // pointer to the list form
+    const listForm = $("#list-form");
     // pointer to the "List name" form
     const listNameForm = $("#list-name");
     // pointer to the create task button inside the modal form
@@ -55,11 +57,19 @@ $(document).ready(function () {
         console.log(listsCount);
     });
 
-    $(listSaveChanges).click(function () {
-        // save the value of the input
-        currentListName = $(listNameForm).val();
-        // reset the value of input
-        $(listNameForm).val("");
+    $(listSaveChanges).click(function (e) {
+        // validate form to ensure that there is
+        // a list name
+        if (!$(listNameForm).val()) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(listForm)[0].classList.add('was-validated');
+        } else {
+            // save the value of the input
+            currentListName = $(listNameForm).val();
+            // reset the value of input
+            $(listNameForm).val("");
+        }
     });
 
     $("#create-task-modal-form").click(function (e) {

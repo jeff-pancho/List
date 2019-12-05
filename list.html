@@ -77,13 +77,17 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="example-modal-label">Create Event</h5>
                     </div>
-                    <form>
+                    <form id="list-form" class="needs-validation" novalidate>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>List name</label>
                                 <input type="text" id="list-name" class="form-control" placeholder="Enter list name..."
                                     required>
+                                <div class="invalid-feedback">
+                                    Please choose a list name.
+                                </div>
                             </div>
+                            
                         </div>
                         <div class="modal-footer">
                             <button type="button" id="cancel-create-list" class="btn btn-secondary" data-dismiss="modal">Close</button>
