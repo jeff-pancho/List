@@ -81,12 +81,15 @@ $(document).ready(function () {
                     "priority": eventPriority,
                     "description": eventDescription
                 })
-                    .then(function (child) {
-                        eventRefs.push(child);
-                    })
+                .then(function (child) {
+                    eventRefs.push(child);
+                })
             });
 
             createNewEvent(eventName, eventDate, eventPriority, eventDescription);
+
+            // make sure no events message is hidden if making first event
+            hideNoEventsMessage();
 
             // Reset values of input forms
             // $(eventName).val("");
@@ -126,17 +129,23 @@ $(document).ready(function () {
                 $(this).find(".down").hide();
             }
         });
+        
         // delete event item
         $(clone).find(".delete-event").click(function () {
             var thisEvent = $(this).closest('li');
-            var id = thisEvent.attr("id");
-            var parseID = id.match(/(\d+)/);
+            var thisEventID = thisEvent.attr("id");
+            var parseID = thisEventID.match(/(\d+)/);
             var index = parseID[0];
             console.log(eventRefs[index]);
             firebase.auth().onAuthStateChanged(function (user) {
                 db.collection("users").doc(user.uid).collection("events")
                     .doc(eventRefs[index].id).delete().then(function () {
                         thisEvent.remove();
+                        eventRefs.splice(index, 1, null);
+                        var afterDelete = eventRefs.filter(doc => doc != null)
+                        if (afterDelete.length == 0) {
+                            showNoEventsMessage();
+                        }
                     })
             })
         });
@@ -150,6 +159,13 @@ $(document).ready(function () {
     function hideNoEventsMessage() {
         if (noEvents.is(":visible")) {
             noEvents.hide();
+        }
+    }
+
+    // Makes the "No Events" message visible if all events are deleted
+    function showNoEventsMessage() {
+        if (noEvents.is(":hidden")) {
+            noEvents.show();
         }
     }
 
