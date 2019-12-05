@@ -5,6 +5,8 @@ This is the project we made for COMP-1930 Projects. Our project uses the followi
   * jQuery
   * Bootstrap 4
   * Firebase Cloud Storage
+  
+The link to our web app can be found [here](https://list-615f1.firebaseapp.com/).
 
 ## Lists
 You can create lists to keep track of things that you need to do.
