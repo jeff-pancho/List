@@ -34,11 +34,13 @@ $(document).ready(function () {
         // pointer to the user's events collection
         let events = db.collection("users").doc(user.uid).collection("events");
 
+        // DATABASE READ of the events collection
         // capture a snapshot of the events collection
         events.get().then(function (docs) {
             if (docs.size > 0) {
                 hideNoEventsMessage();
                 // execute a function for each child of the event collection
+                // this will basically add every event to the page
                 docs.forEach(function (child) {
                     let name = child.data().name;
                     let date = child.data().date;
@@ -80,7 +82,8 @@ $(document).ready(function () {
                 let eventPriority = $(selectPriority).val();
                 let eventDescription = $(eventDescriptionForm).val();
 
-                //save the information into the database
+                // DATABASE WRITE to the events collection
+                // save the information into the database
                 firebase.auth().onAuthStateChanged(function (user) {
                     db.collection("users").doc(user.uid).collection("events").add({
                         "name": eventName,
@@ -165,6 +168,7 @@ $(document).ready(function () {
         let parseID = thisEventID.match(/(\d+)/);
         let index = parseID[0];
 
+        // DATABASE READ of the event document
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("events")
                 .doc(eventRefs[index].id).get().then(function (doc) {
@@ -202,6 +206,7 @@ $(document).ready(function () {
                 let eventPriority = $(selectPriority).val();
                 let eventDescription = $(eventDescriptionForm).val();
 
+                // DATABASE WRITE to the event document (updating it)
                 // save the information into the database
                 firebase.auth().onAuthStateChanged(function (user) {
                     db.collection("users").doc(user.uid).collection("events")
@@ -241,6 +246,7 @@ $(document).ready(function () {
         let thisEventID = thisEvent.attr("id");
         let parseID = thisEventID.match(/(\d+)/);
         let index = parseID[0];
+        // DATABASE WRITE of the event document (deletion)
         // remove the event from the database and the array
         console.log(eventRefs[index]);
         firebase.auth().onAuthStateChanged(function (user) {
