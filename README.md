@@ -1,7 +1,7 @@
 # List Away
-To-do list and event viewer web application for the weary student or anyone else, for that matter.
+To-do list and event viewer web application for the weary student or anyone else for that matter
 
-This is the project we made for COMP-1930 Projects. Our project used the following:
+This is the project we made for COMP-1930 Projects. Our project uses the following:
   * jQuery
   * Bootstrap 4
   * Firebase Cloud Storage
