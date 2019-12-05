@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>COMP-1930 Project</title>
+        <title>List Away</title>
         <meta charset="utf-8">
 
         <!-- Bootstrap for Mobile-first, and JQuery -->
@@ -28,13 +28,35 @@
         <!-- Firebase app config -->
         <script src="scripts/firebaseConfig.js"></script>
     </head>
-    <body style="background-color:#9ed0ff;">
-        <h1 id="welcome">Welcome to
-            <img src="images/brand-logo.png" alt="List Away"style="width:150px;height:65px;">
-            <button style="background-color: #3f51b5" type="button" id="signup" class="btn btn-primary">Sign Up</button>
-        </h1>
+    <body>
 
-        <div id="firebaseui-auth-container"></div>
+        <div class="jumbotron">
+            <h1 class="display-4">Welcome to</h1>
+            <img id="logo" src="images/brand-logo-full-white.png" alt="List Away">
+            <p class="lead">
+                <button type="button" id="signup" class="btn btn-primary" data-toggle="modal" data-target="#signUpModal">Sign Up</button>
+            </p>
+            <hr class="my-4">
+            <p class="lead">This is a simple app that has two main functions.</p>
+            <div id="details">
+                <div>
+                    <p>Lists</p>
+                    <img class="icon" src="images/list.png" >
+                </div>
+                <div>
+                    <p>Events</p>
+                    <img class="icon" src="images/calendar.png" >
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="firebaseui-auth-container"></div>
+                </div>
+            </div>
+        </div>
         <div id="loader">Loading...</div>
 
         <script>
