@@ -34,7 +34,7 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <a class="navbar-brand navbar-left" href="#"><img src="images/brand-logo.png" id="logo" /></a>
+            <img src="images/brand-logo.png" id="logo" class="navbar-brand"/>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
@@ -42,6 +42,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="./events.html">Events</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="logout" class="nav-link" href="#">Log out</a>
                     </li>
                 </ul>
             </div>
@@ -176,5 +179,6 @@
                 $("#task-clone").hide();
                 // $("#btn-dropdown").hide();
         </script>
+        <script src="scripts/logout.js"></script>
     </body>
 </html>

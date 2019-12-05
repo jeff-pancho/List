@@ -31,21 +31,6 @@ $(document).ready(function () {
     // Placeholder event
     const eventItem = $("#placeholder");
 
-    // Datepicker setup
-    var date_input = $('input[name="date"]'); //our date input has the name "date"
-    // var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
-    var options = {
-        format: 'mm/dd/yyyy',
-        // container: container,
-        todayHighlight: true,
-        autoclose: true,
-        toggleActive: true,
-        defaultViewDate: {  year: new Date().getFullYear(),
-                            month: new Date().getMonth(),
-                            day: new Date().getDate() }
-    };
-    date_input.datepicker(options);
-
     //if user is authenticated
     firebase.auth().onAuthStateChanged(function (user) {
         //pointer to the user's events collection
@@ -86,8 +71,8 @@ $(document).ready(function () {
             let eventDate = $(eventDateForm).val();
             let eventPriority = $(selectPriority).val();
             let eventDescription = $(eventDescriptionForm).val();
-    
-    
+
+
             //save the information into the database
             firebase.auth().onAuthStateChanged(function (user) {
                 db.collection("users").doc(user.uid).collection("events").add({
@@ -96,13 +81,13 @@ $(document).ready(function () {
                     "priority": eventPriority,
                     "description": eventDescription
                 })
-                .then(function(child) {
-                    eventRefs.push(child);
-                })
+                    .then(function (child) {
+                        eventRefs.push(child);
+                    })
             });
-    
+
             createNewEvent(eventName, eventDate, eventPriority, eventDescription);
-    
+
             // Reset values of input forms
             // $(eventName).val("");
             // $(date_input).datepicker('update', '');
@@ -150,9 +135,9 @@ $(document).ready(function () {
             console.log(eventRefs[index]);
             firebase.auth().onAuthStateChanged(function (user) {
                 db.collection("users").doc(user.uid).collection("events")
-                .doc(eventRefs[index].id).delete().then(function() {
-                    thisEvent.remove();
-                })
+                    .doc(eventRefs[index].id).delete().then(function () {
+                        thisEvent.remove();
+                    })
             })
         });
 
@@ -167,5 +152,22 @@ $(document).ready(function () {
             noEvents.hide();
         }
     }
+
+    // Datepicker setup
+    var date_input = $('input[name="date"]'); //our date input has the name "date"
+    // var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
+    var options = {
+        format: 'mm/dd/yyyy',
+        // container: container,
+        todayHighlight: true,
+        autoclose: true,
+        toggleActive: true,
+        defaultViewDate: {
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
+            day: new Date().getDate()
+        }
+    };
+    date_input.datepicker(options);
 
 });
