@@ -23,8 +23,6 @@ $(document).ready(function () {
     const taskSaveChanges = $("#task-save-changes");
     // pointer to the cancel button in the modal form for tasks
     const cancelCreateTasks = $("#cancel-create-tasks");
-    // pointer to the trash can button
-    const trashCanBtn = $("#trash-can-btn");
 
     // number of lists currently loaded
     let listsCount = 0;
@@ -33,16 +31,18 @@ $(document).ready(function () {
     // Array of list references
     let listRefs = [];
 
-    //if user is authenticated
+    // if user is authenticated
     firebase.auth().onAuthStateChanged(function (user) {
         //pointer to the user's list collection
         let lists = db.collection("users").doc(user.uid).collection("lists");
 
-        //capture a snapshot of the lists collection
+        // DATABASE READ of the lists collection
+        // capture a snapshot of the lists collection
         lists.get().then(function (doc) {
             if (doc.size > 0) {
                 hideNoLists();
-                //execute a function for each child of the lists collectin
+                // execute a function for each child of the lists collection
+                // basically 
                 doc.forEach(function (child) {
                     let name = child.data().name;
                     let taskArray = child.data().tasks;
@@ -139,6 +139,7 @@ $(document).ready(function () {
     function addList(listName, taskArray) {
         hideNoLists();
 
+        // DATABASE WRITE to the user's lists collecction
         // add new list to database
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists").add({
@@ -193,6 +194,8 @@ $(document).ready(function () {
         let parseID = thisListID.match(/(\d+)/);
         let index = parseID[0];
         console.log(listRefs[index]);
+
+        // DATABASE WRITE of the list document (deleteion)
         // remove the list from the database and array
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists")
@@ -216,6 +219,7 @@ $(document).ready(function () {
         let parseID = thisListID.match(/(\d+)/);
         let index = parseID[0];
 
+        // DATABASE READ of the list document
         // puts all the tasks taken from the database into the variable
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("lists")
@@ -239,6 +243,7 @@ $(document).ready(function () {
         // Also adds a new click handler that will save the changes made to the tasks
         // in the list.
         $(taskSaveChanges).unbind().click(function () {
+            // DATABASE WRITE of the modified list document
             // update the tasks array inside the database
             firebase.auth().onAuthStateChanged(function (user) {
                 db.collection("users").doc(user.uid).collection("lists")
