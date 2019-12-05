@@ -42,7 +42,7 @@ $(document).ready(function () {
             if (doc.size > 0) {
                 hideNoLists();
                 // execute a function for each child of the lists collection
-                // basically 
+                // this will basically add every list document to the page
                 doc.forEach(function (child) {
                     let name = child.data().name;
                     let taskArray = child.data().tasks;
@@ -142,11 +142,12 @@ $(document).ready(function () {
         // DATABASE WRITE to the user's lists collecction
         // add new list to database
         firebase.auth().onAuthStateChanged(function (user) {
-            db.collection("users").doc(user.uid).collection("lists").add({
-                "name": listName,
-                "tasks": taskArray,
-                "status": "active"
-            })
+            db.collection("users").doc(user.uid).collection("lists")
+                .add({
+                    "name": listName,
+                    "tasks": taskArray,
+                    "status": "active"
+                })
                 .then(function (child) {
                     listRefs.push(child);
                     //append before #create-list-container
