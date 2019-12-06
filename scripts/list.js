@@ -81,7 +81,8 @@ $(document).ready(function () {
                  */
                 $(taskContainer).children().each(function (i, child) {
                     let taskName = $(child).find("p").text();
-                    tasks.push(taskName);
+                    let task = {name: taskName, complete: false};
+                    tasks.push(task);
                 });
                 console.log(currentListName);
                 addList(currentListName, tasks);
@@ -99,7 +100,8 @@ $(document).ready(function () {
                     let taskName = $(taskNameForm).val();
                     // reset the form
                     $(taskNameForm).val("");
-                    addTaskToForm(taskName);
+                    let task = {name: taskName, complete: false};
+                    addTaskToForm(task);
                 }
             });
         }
@@ -113,12 +115,12 @@ $(document).ready(function () {
      * @param {String} taskName name of the task
      * @returns the task added to the form (for method chaining)
      */
-    function addTaskToForm(taskName) {
+    function addTaskToForm(task) {
         let taskItem = $("#task-clone").clone().show();
         $(taskItem).removeAttr("id");
         $(taskItem).find(".check-mark").remove();
         $(taskItem).addClass("list");
-        $(taskItem).find("p").text(taskName);
+        $(taskItem).find("p").text(task.name);
         // trash can button to delete itself
         $(taskItem).find("button").click(function () {
             $(this).parent().remove();
@@ -269,10 +271,11 @@ $(document).ready(function () {
             // if the "Task name" form is filled out
             if ($(taskNameForm).val()) {
                 let taskName = $(taskNameForm).val();
-                addTaskToForm(taskName);
+                let task = {name: taskName, complete: false};
+                addTaskToForm(task);
                 // reset the form
                 $(taskNameForm).val("");
-                tasksArray.push(taskName);
+                tasksArray.push(task);
             }
         });
     }
@@ -284,11 +287,11 @@ $(document).ready(function () {
      * @param {Array} tasksArray array of tasks
      */
     function generateTasksInsideModal(tasksArray) {
-        tasksArray.forEach(function (taskName) {
+        tasksArray.forEach(function (task) {
             // Add the task to the form then unbind the click handler on the
             // trash button. This will allow us to bind a new click handler
             // to the trash button to modify the array.
-            addTaskToForm(taskName).find(".trash-list").unbind().click(function () {
+            addTaskToForm(task).find(".trash-list").unbind().click(function () {
                 // remove this task from the array
                 let index = $(this).parent().index();
                 tasksArray.splice(index, 1);
@@ -304,14 +307,58 @@ $(document).ready(function () {
      * @param {Array} taskArray the array that holds all the names of the tasks
      */
     function generateTasks(clone, taskArray) {
+        let sortedArray = sortTasks(taskArray);
+
         let taskListContainer = $(clone).find(".task-list-container");
-        taskArray.forEach(function (task) {
+        sortedArray.forEach(function (task) {
             let taskClone = $("#task-clone").clone().show();
             $(taskClone).removeAttr("id");
             $(taskClone).find(".trash-list").remove();
-            $(taskClone).find("p").text(task);
+            $(taskClone).find("p").text(task.name);
+
+            if(task.complete) {
+                $(taskClone).addClass("complete");
+            } else {
+                $(taskClone).removeClass("complete");
+            }
+
+            $(taskClone).find(".check-mark").click(function () {
+                let thisList = $(this).closest(".list");
+                let thisListID = thisList.attr("id");
+                let parseID = thisListID.match(/(\d+)/);
+                let index = parseID[0];
+                task.complete = !task.complete;
+                
+                firebase.auth().onAuthStateChanged(function (user) {
+                    db.collection("users").doc(user.uid).collection("lists")
+                        .doc(listRefs[index].id).update({
+                            "tasks": sortedArray
+                        }).then(function () {
+                            // update the list afterwards
+                            let listItem = $("#list-item-" + index);
+                            console.log(listItem);
+                            $(listItem).find(".task-list-container").empty();
+                            generateTasks(listItem, sortedArray);
+                            emptyTasks();
+                        });
+                });
+            });
             $(taskListContainer).append(taskClone);
         });
+    }
+
+    function sortTasks(tasksArray) {
+        let currentTasks = tasksArray.filter(function(task) {
+            return !task.complete;
+        })
+
+        let completeTasks = tasksArray.filter(function(task) {
+            return task.complete;
+        });
+
+        let sortedTasks = currentTasks.concat(completeTasks);
+
+        return sortedTasks;
     }
 
     /**
