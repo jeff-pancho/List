@@ -13,8 +13,11 @@ img {
 
 p {
     display: inline-block;
-    overflow: auto;
     margin: 0 0 0 15px !important;
+}
+
+.list-name .task-name {
+    overflow: auto;
 }
 
 .list {
