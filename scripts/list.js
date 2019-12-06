@@ -337,6 +337,8 @@ $(document).ready(function () {
                 let index = parseID[0];
                 task.complete = !task.complete;
                 
+                // DATABASE WRITE of the modified list document
+                // update the tasks array inside the database
                 firebase.auth().onAuthStateChanged(function (user) {
                     db.collection("users").doc(user.uid).collection("lists")
                         .doc(listRefs[index].id).update({
