@@ -29,39 +29,18 @@ $(document).ready(function () {
     // Placeholder event
     const eventItem = $("#placeholder");
 
-    // if user is authenticated
-    firebase.auth().onAuthStateChanged(function (user) {
-        // pointer to the user's events collection
-        let events = db.collection("users").doc(user.uid).collection("events");
-
-        // DATABASE READ of the events collection
-        // capture a snapshot of the events collection
-        events.get().then(function (docs) {
-            if (docs.size > 0) {
-                hideNoEventsMessage();
-                // execute a function for each child of the event collection
-                // this will basically add every event to the page
-                docs.forEach(function (child) {
-                    let name = child.data().name;
-                    let date = child.data().date;
-                    let priority = child.data().priority;
-                    let description = child.data().description;
-
-                    eventRefs.push(child);
-
-                    // append before #create-event-container
-                    createNewEvent(name, date, priority, description);
-                });
-            }
-        });
-    });
+    // populate users events ordered by date
+    orderEvents();
 
     // reset the forms everytime the user closes the modal
     $("#cancel-button").click(function () {
         $(eventForm)[0].reset();
     });
 
-    // Creating new event
+    /**
+     * Event Listener on the create event button.
+     * Opens up the create event modal form.
+     */
     $(createEventButton).click(function () {
         $("#example-modal-label").html("Create Event");
         // Unbinds any previous event handlers of the save changes button
@@ -91,21 +70,20 @@ $(document).ready(function () {
                         "priority": eventPriority,
                         "description": eventDescription
                     })
-                    .then(function (child) {
-                        eventRefs.push(child);
-                    })
+                        .then(function (child) {
+                            eventRefs.push(child);
+                        })
                 });
 
                 createNewEvent(eventName, eventDate, eventPriority, eventDescription);
                 // make sure no events message is hidden if making first event
                 hideNoEventsMessage();
                 // Reset values of input forms
-                // $(eventName).val("");
-                // $(date_input).datepicker('update', '');
-                // $(eventPriority).val("");
-                // $(eventDescription).val("");
                 $(eventForm)[0].reset();
                 $(eventForm)[0].classList.remove('was-validated');
+
+                // re-orders the user's events by date
+                orderEvents();
             }
         });
     });
@@ -148,9 +126,10 @@ $(document).ready(function () {
             }
         });
 
+        // Event listener to modify event item
         $(clone).find(".modify-event").click(modifyEventSetup);
-        
-        // delete event item
+
+        // Event listener to delete event item
         $(clone).find(".delete-event").click(deleteEvent);
 
         $(clone).insertBefore(createEvent);
@@ -173,7 +152,7 @@ $(document).ready(function () {
             db.collection("users").doc(user.uid).collection("events")
                 .doc(eventRefs[index].id).get().then(function (doc) {
                     modifyEvent(doc, index);
-                }); 
+                });
         });
     }
 
@@ -211,29 +190,32 @@ $(document).ready(function () {
                 firebase.auth().onAuthStateChanged(function (user) {
                     db.collection("users").doc(user.uid).collection("events")
                         .doc(doc.id).update({
-                        "name": eventName,
-                        "date": eventDate,
-                        "priority": eventPriority,
-                        "description": eventDescription
-                    })
-                    .then(function () {
-                        // update the event afterwards
-                        let updatedEvent = $("#event-item-" + index);
-                        $(updatedEvent).find("#item-name").text(eventName);
-                        $(updatedEvent).find("#item-date").text(eventDate);
-                        $(updatedEvent).find("#item-priority").html("<b>Priority: </b>" + eventPriority);
-                        let updatedDesc = document.createTextNode(eventDescription);
-                        $(updatedEvent).find("#item-description").html("<b>Description: </b>");
-                        $(updatedEvent).find("#item-description").append(updatedDesc);
-                        
-                        console.log(updatedEvent);
-                    })
+                            "name": eventName,
+                            "date": eventDate,
+                            "priority": eventPriority,
+                            "description": eventDescription
+                        })
+                        .then(function () {
+                            // update the event afterwards
+                            let updatedEvent = $("#event-item-" + index);
+                            $(updatedEvent).find("#item-name").text(eventName);
+                            $(updatedEvent).find("#item-date").text(eventDate);
+                            $(updatedEvent).find("#item-priority").html("<b>Priority: </b>" + eventPriority);
+                            let updatedDesc = document.createTextNode(eventDescription);
+                            $(updatedEvent).find("#item-description").html("<b>Description: </b>");
+                            $(updatedEvent).find("#item-description").append(updatedDesc);
+
+                            console.log(updatedEvent);
+                        })
                 });
 
                 // make sure no events message is hidden if making first event
                 hideNoEventsMessage();
                 $(eventForm)[0].reset();
                 $(eventForm)[0].classList.remove('was-validated');
+
+                // re-orders the user's events by date
+                orderEvents();
             }
         });
     }
@@ -248,7 +230,7 @@ $(document).ready(function () {
         let index = parseID[0];
         // DATABASE WRITE of the event document (deletion)
         // remove the event from the database and the array
-        console.log(eventRefs[index]);
+        console.log(eventRefs[index].data().name);
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("events")
                 .doc(eventRefs[index].id).delete().then(function () {
@@ -262,26 +244,67 @@ $(document).ready(function () {
         })
     }
 
-    // Hides the "No Events" message
+    /**
+     * Populates the user's events, ordered by date.
+     */
+    function orderEvents() {
+        $(createEvent).prevAll().remove();
+        eventsCount = 0;
+        eventRefs = [];
+        // if user is authenticated
+        firebase.auth().onAuthStateChanged(function (user) {
+            // pointer to the user's events collection
+            let events = db.collection("users").doc(user.uid).collection("events");
+
+            let orderedEvents = events.orderBy("date");
+
+            // DATABASE READ of the events collection
+            // capture a snapshot of the events collection
+            orderedEvents.get().then(function (docs) {
+                if (docs.size > 0) {
+                    hideNoEventsMessage();
+                    // execute a function for each child of the event collection
+                    // this will basically add every event to the page
+                    docs.forEach(function (child) {
+                        let name = child.data().name;
+                        let date = child.data().date;
+                        let priority = child.data().priority;
+                        let description = child.data().description;
+
+                        eventRefs.push(child);
+
+                        // append before #create-event-container
+                        createNewEvent(name, date, priority, description);
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * Hide the notifier that says you have no events.
+     */
     function hideNoEventsMessage() {
         if (noEvents.is(":visible")) {
             noEvents.hide();
         }
     }
 
-    // Makes the "No Events" message visible if all events are deleted
+    /**
+     * Shows the notifier that says you have no events.
+     */
     function showNoEventsMessage() {
         if (noEvents.is(":hidden")) {
             noEvents.show();
         }
     }
 
-    // Datepicker setup
+    /**
+     * Datepicker setup.
+     */
     var date_input = $('input[name="date"]'); //our date input has the name "date"
-    // var container = $('.bootstrap-iso form').length > 0 ? $('.bootstrap-iso form').parent() : "body";
     var options = {
         format: 'mm/dd/yyyy',
-        // container: container,
         todayHighlight: true,
         autoclose: true,
         toggleActive: true,
