@@ -58,6 +58,10 @@ $(document).ready(function () {
         console.log(listsCount);
     });
 
+    /**
+     * Event Listener on save changes list button.
+     * Saves the list.
+     */
     $(listSaveChanges).click(function (e) {
         // validate form to ensure that there is
         // a list name
@@ -112,7 +116,7 @@ $(document).ready(function () {
 
     /**
      * Adds a new task to the task modal form. (Phew)
-     * @param {String} taskName name of the task
+     * @param {Object} task task object of the following form: {name: String, complete: boolean}
      * @returns the task added to the form (for method chaining)
      */
     function addTaskToForm(task) {
@@ -136,7 +140,7 @@ $(document).ready(function () {
     /**
      * Adds the list to the document and saves it to the database.
      * @param {String} listName the name of the list
-     * @param {Array} taskArray the array that holds all the names of the tasks
+     * @param {Array} taskArray the array that holds all the task objects
      */
     function addList(listName, taskArray) {
         hideNoLists();
@@ -161,7 +165,7 @@ $(document).ready(function () {
     /**
      * Creates the list element along with its tasks and places it into the document.
      * @param {String} listName the name of the list
-     * @param {Array} taskArray the array that holds all the names of the tasks
+     * @param {Array} taskArray the array that holds all the task objects
      */
     function createNewList(listName, taskArray) {
         let clone = $("#list-clone").clone().show();
@@ -304,7 +308,7 @@ $(document).ready(function () {
     /**
      * Generates all the tasks and puts it all into the clone object.
      * @param {*} clone the jQuery object
-     * @param {Array} taskArray the array that holds all the names of the tasks
+     * @param {Array} taskArray the array that holds all the task objects
      */
     function generateTasks(clone, taskArray) {
         let sortedArray = sortTasks(taskArray);
@@ -316,12 +320,16 @@ $(document).ready(function () {
             $(taskClone).find(".trash-list").remove();
             $(taskClone).find("p").text(task.name);
 
+            // Adds or removes the .complete class, based on task.complete
             if(task.complete) {
                 $(taskClone).addClass("complete");
             } else {
                 $(taskClone).removeClass("complete");
             }
 
+            // Event listener for marking task as complete.
+            // Finds the list it belongs to, inverts the boolean task.complete,
+            // and then saves this change to the database.
             $(taskClone).find(".check-mark").click(function () {
                 let thisList = $(this).closest(".list");
                 let thisListID = thisList.attr("id");
@@ -347,6 +355,10 @@ $(document).ready(function () {
         });
     }
 
+    /**
+     * Sorts the array of tasks so that complete tasks are on the bottom.
+     * @param {Array} tasksArray the array that holds all the task objects
+     */
     function sortTasks(tasksArray) {
         let currentTasks = tasksArray.filter(function(task) {
             return !task.complete;
