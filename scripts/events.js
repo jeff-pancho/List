@@ -25,7 +25,7 @@ $(document).ready(function () {
     // number of events currently loaded
     let eventsCount = 0;
     // Array of event references
-    let eventRefs = [];
+    var eventRefs = [];
     // Placeholder event
     const eventItem = $("#placeholder");
 
@@ -70,20 +70,19 @@ $(document).ready(function () {
                         "priority": eventPriority,
                         "description": eventDescription
                     })
-                        .then(function (child) {
-                            eventRefs.push(child);
-                        })
+                    .then(function() {
+                        // re-orders the user's events by date
+                        orderEvents();
+                    })
                 });
 
-                createNewEvent(eventName, eventDate, eventPriority, eventDescription);
+
                 // make sure no events message is hidden if making first event
                 hideNoEventsMessage();
                 // Reset values of input forms
                 $(eventForm)[0].reset();
                 $(eventForm)[0].classList.remove('was-validated');
 
-                // re-orders the user's events by date
-                orderEvents();
             }
         });
     });
@@ -196,16 +195,8 @@ $(document).ready(function () {
                             "description": eventDescription
                         })
                         .then(function () {
-                            // update the event afterwards
-                            let updatedEvent = $("#event-item-" + index);
-                            $(updatedEvent).find("#item-name").text(eventName);
-                            $(updatedEvent).find("#item-date").text(eventDate);
-                            $(updatedEvent).find("#item-priority").html("<b>Priority: </b>" + eventPriority);
-                            let updatedDesc = document.createTextNode(eventDescription);
-                            $(updatedEvent).find("#item-description").html("<b>Description: </b>");
-                            $(updatedEvent).find("#item-description").append(updatedDesc);
-
-                            console.log(updatedEvent);
+                            // re-populate events by date
+                            orderEvents();
                         })
                 });
 
@@ -215,7 +206,6 @@ $(document).ready(function () {
                 $(eventForm)[0].classList.remove('was-validated');
 
                 // re-orders the user's events by date
-                orderEvents();
             }
         });
     }
@@ -230,6 +220,7 @@ $(document).ready(function () {
         let index = parseID[0];
         // DATABASE WRITE of the event document (deletion)
         // remove the event from the database and the array
+        console.log(thisEventID);
         console.log(eventRefs[index].data().name);
         firebase.auth().onAuthStateChanged(function (user) {
             db.collection("users").doc(user.uid).collection("events")
@@ -250,7 +241,7 @@ $(document).ready(function () {
     function orderEvents() {
         $(createEvent).prevAll().remove();
         eventsCount = 0;
-        eventRefs = [];
+        eventRefs.splice(0, eventRefs.length);
         // if user is authenticated
         firebase.auth().onAuthStateChanged(function (user) {
             // pointer to the user's events collection
@@ -265,7 +256,7 @@ $(document).ready(function () {
                     hideNoEventsMessage();
                     // execute a function for each child of the event collection
                     // this will basically add every event to the page
-                    docs.forEach(function (child) {
+                    docs.forEach(function (child, i) {
                         let name = child.data().name;
                         let date = child.data().date;
                         let priority = child.data().priority;
