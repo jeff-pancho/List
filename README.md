@@ -13,12 +13,16 @@ You can create lists to keep track of things that you need to do.
 
 After creating a list, you will be able to add tasks that you need to do.
 
+Tasks can be marked as complete, and will be grayed out and moved to the bottom of the list.
+
 A list can be modified or deleted at any time.
 
 ## Events
 For time-sensitive things you need to keep track off, you can create events.
 
 You will be able to assign a date, priority, and description to your event after creating one.
+
+Events are automatically ordered from earliest to latest date.
 
 Just like lists, events can be modified or deleted at any time.
 
